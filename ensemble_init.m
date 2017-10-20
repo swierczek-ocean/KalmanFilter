@@ -1,4 +1,4 @@
-function [ensemble] = ensemble_init(dt,ne,M,N,F,X_start)
+function ensemble = ensemble_init(dt,ne,M,N,F,X_start)
 tic();
 num_iter = 1000/dt;
 rando = randperm(num_iter,ne);

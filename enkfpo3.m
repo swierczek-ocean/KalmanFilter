@@ -1,4 +1,4 @@
-function [ARMSE,aspread,L] = enkfpo3(dt,ensemble,M,N,H,t_final,R,Y,T,jump,r,alpha)
+function [ARMSE,aspread,L] = enkfpo3(dt,ensemble,M,N,H,t_final,R,Y,T,jump,threshold,r,alpha)
 tic();
 
 f = @(x)(M*x.*(N*x)+(8-x));
@@ -25,7 +25,9 @@ for i=1:(q-1)
         x_f = mu_f + sqrt(1+alpha).*(X-mu_f);               % ensemble inflation
         X_f = (x_f - mu_f).*(1/sqrt(ne-1));                 % forecast perturbations
         P_f = X_f*transpose(X_f);                           % forecast covariance
-        L = localize(P_f,r);                                % creating localization matrix L
+        if(counter<100)
+            L = localize(P_f,threshold,r);                  % creating localization matrix L
+        end
         P_f = L.*P_f;                                       % localization
         K = P_f*(H')/(H*P_f*H' + Rm);                       % Kalman Gain
         Y_tilde = Y(:,counter)+normrnd(0,R,m,ne);           % analysis perturbations
