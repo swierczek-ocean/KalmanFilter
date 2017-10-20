@@ -10,7 +10,7 @@ X = ensemble;
 RMSE = [];
 spread = [];
 Rm = R*eye(m);
-time = [1:1:q-1];
+time = [1:1:a-1];
 counter = 0;
 
 for i=1:(q-1)
@@ -19,15 +19,12 @@ for i=1:(q-1)
     k3=f(X+0.5*dt.*k2);
     k4=f(X+dt.*k3);
     X = X + (1/6)*dt.*(k1+2.*k2+2.*k3+k4);            % forecast ensemble
-    largeX = max(sum(X))
     
     if(mod(i,jump)==0)
-        counter = counter + 1
+        counter = counter + 1;
         mu_f = (1/ne).*transpose(sum(transpose(X)));      % forecast mean
         X_f = (X - mu_f).*(1/sqrt(ne-1));                 % forecast perturbations
         P_f = X_f*transpose(X_f);                         % forecast covariance
-        largeX_f = max(sum(X_f))
-        largeP_f = max(sum(P_f))
         K = P_f*(H')/(H*P_f*(H') + Rm);                   % Kalman Gain
         mu_a = mu_f + K*(Y(:,counter)-H*mu_f);            % analysis mean
         P_a = (eye(n)-K*H)*P_f;                           % analysis covariance
@@ -35,7 +32,7 @@ for i=1:(q-1)
         A = (V/Rm)*(V');
         A = 0.5.*(A+A');
         [U,lambda] = eig(A);
-        Q = diag(1./(sqrt(ones(ne,1)+diag(lambda))));
+        Q = sqrt(eye(ne)+lambda);
         Z = U/Q;
         X_a = X_f*Z*W;                                    % analysis perturbations
         X = mu_a + sqrt(ne-1).*X_a;                       % analysis ensemble
