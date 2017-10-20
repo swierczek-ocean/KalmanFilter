@@ -3,7 +3,6 @@ tic();
 
 f = @(x)(M*x.*(N*x)+(8-x));
 [n,ne]=size(ensemble);
-numiter = ceil(t_final/dt);
 [m,q]=size(Y);
 X = ensemble;
 RMSE = [];
@@ -17,7 +16,6 @@ for i=1:(q-1)
     k3=f(X+0.5*dt.*k2);
     k4=f(X+dt.*k3);
     x_f = X + (1/6)*dt.*(k1+2.*k2+2.*k3+k4);            % forecast ensemble
-    large = max(sum(x_f))
     mu_f = (1/ne).*transpose(sum(transpose(x_f)));      % forecast mean
     X_f = (x_f - mu_f).*(1/sqrt(ne-1));                 % forecast perturbations
     P_f = X_f*transpose(X_f);                           % forecast covariance
