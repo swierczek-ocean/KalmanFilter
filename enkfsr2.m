@@ -26,7 +26,7 @@ for i=1:(q-1)
         X_f = (X - mu_f).*(1/sqrt(ne-1));                 % forecast perturbations
         P_f = X_f*transpose(X_f);                         % forecast covariance
         K = P_f*(H')/(H*P_f*(H') + Rm);                   % Kalman Gain
-        mu_a = mu_f + K*(Y(:,counter)-H*mu_f);            % analysis mean
+        mu_a = mu_f + K*(Y(:,counter+1)-H*mu_f);          % analysis mean
         P_a = (eye(n)-K*H)*P_f;                           % analysis covariance
         V = (X_f')*(H');
         A = (V/Rm)*(V');
@@ -36,7 +36,7 @@ for i=1:(q-1)
         Z = U/Q;
         X_a = X_f*Z*W;                                    % analysis perturbations
         X = mu_a + sqrt(ne-1).*X_a;                       % analysis ensemble
-        error = mu_a-T(:,jump*(counter-1)+1);
+        error = mu_a-T(:,jump*counter+1);
         RMSE = [RMSE,sqrt((1/n).*transpose(error)*error)];
         spread = [spread,sqrt(trace(P_a)/n)];
     end
