@@ -11,8 +11,8 @@ spread = [];
 Rm = R*eye(m);
 time = [1:1:a-1];
 counter = 0;
-spyvec = zeros(1,a-1);
-indices = [];
+% spyvec = zeros(1,a-1);
+% indices = [];
 
 for i=1:(q-1)
     k1=f(X);
@@ -38,15 +38,15 @@ for i=1:(q-1)
         error = mu_a-T(:,jump*counter+1);
         RMSE = [RMSE,sqrt((1/n).*transpose(error)*error)];
         spread = [spread,sqrt(trace(P_a)/n)];
-        spyvec(counter) = mu_a(spy);
-        indices = [indices,i];
+%         spyvec(counter) = mu_a(spy);
+%         indices = [indices,i];
     end
 end
 
 [m,q] = size(RMSE);
 z = floor(q/2);
-ARMSE = (1/(q-1-z))*sum(transpose(RMSE(z:q-1)))
-aspread = (1/(q-1-z))*sum(transpose(spread(z:q-1)))
+ARMSE = (1/(q-1-z))*sum(transpose(RMSE(z:q-1)));
+aspread = (1/(q-1-z))*sum(transpose(spread(z:q-1)));
 
 figure
 plot(time,RMSE,'*','MarkerSize',5,'Color','red')
@@ -57,15 +57,15 @@ xlabel('time')
 legend('root mean square error','spread')
 print('ErrorsPO','-djpeg')
 
-figure
-plot(time,spyvec,'*','MarkerSize',5,'Color','red')
-hold on
-plot(time,T(spy,indices),'o','MarkerSize',5,'Color','blue')
-title(['True Data vs. Kalman Estimate in coordinate ', num2str(spy)])
-xlabel('time')
-legend('Kalman','True')
-print('KalmanvsTrue','-djpeg')
+% figure
+% plot(time,spyvec,'*','MarkerSize',5,'Color','red')
+% hold on
+% plot(time,T(spy,indices),'o','MarkerSize',5,'Color','blue')
+% title(['True Data vs. Kalman Estimate in coordinate ', num2str(spy)])
+% xlabel('time')
+% legend('Kalman','True')
+% print('KalmanvsTrue','-djpeg')
 
-toc()
+% toc();
 end
 

@@ -11,8 +11,8 @@ spread = [];
 Rm = R*eye(m);
 time = [1:1:a-1];
 counter = 0;
-spyvec = zeros(1,a-1);
-indices = [];
+% spyvec = zeros(1,a-1);
+% indices = [];
 
 for i=1:(q-1)
     k1=f(X);                                          % RK4
@@ -43,8 +43,8 @@ for i=1:(q-1)
         error = mu_a-T(:,jump*counter+1);
         RMSE = [RMSE,sqrt((1/n).*transpose(error)*error)];
         spread = [spread,sqrt(trace(P_a)/n)];
-        spyvec(counter) = mu_a(spy);
-        indices = [indices,i];
+%         spyvec(counter) = mu_a(spy);
+%         indices = [indices,i];
     end
 
 end
@@ -72,6 +72,6 @@ print(['ErrorsSRI_r=',num2str(r),'_alpha=',num2str(alpha)],'-djpeg')
 % legend('Kalman','True')
 % print('KalmanvsTrue','-djpeg')
 
-toc()
+% toc()
 end
 
