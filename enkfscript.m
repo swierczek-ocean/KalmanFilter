@@ -3,8 +3,9 @@ t_final = 10;
 R = 1;
 obsdt = 0.1;
 threshold = 0.2;
-r = 3;
+r = 2;
 alpha = 0.2;
+set(groot, 'DefaultFigureVisible', 'on');
 
 [M,N,H,SynthDataTrue,SynthDataObs,X_start,jump] = lorenz(40,dt,t_final,8,R,obsdt);
 
@@ -14,19 +15,15 @@ Y = SynthDataObs;
 size(Y);
 size(T);
 
-ne=2000;
+ne=100;
 ensemble = ensemble_init(dt,ne,M,N,8,X_start);
 W = randomrotation(ne);
 
-%[ARMSE,aspread] = enkfpo2(dt,ensemble,M,N,H,t_final,R,Y,T,jump)
 
-%[ARMSE,aspread] = enkfsr2(dt,ensemble,M,N,H,t_final,R,Y,T,jump,W)
+[ARMSE,aspread] = enkfpo3(dt,ensemble,M,N,H,t_final,R,Y,T,jump,threshold,r,alpha,37);
 
-%[ARMSE,aspread,L] = enkfpo3(dt,ensemble,M,N,H,t_final,R,Y,T,jump,threshold,r,alpha,19);
+[ARMSE,aspread] = enkfsr3(dt,ensemble,M,N,H,t_final,R,Y,T,jump,threshold,r,alpha,37)
 
-[ARMSE,aspread] = enkfsr3(dt,ensemble,M,N,H,t_final,R,Y,T,jump,W,threshold,r,alpha,23)
+[ARMSE,aspread] = enkfsr4(dt,ensemble,M,N,H,t_final,R,Y,T,jump,threshold,r,alpha,37)
 
-%[RMSE,spread] = enkfpoplot(dt,ensemble,M,N,H,t_final,R,Y,T,20,X_start,1);
-
-%[M,N,H,SynthDataTrue,SynthDataObs,X_start] = lorenzplot(40,dt,t_final,8,R,15,1,30);
-
+[ARMSE,aspread] = enkfsr5(dt,ensemble,M,N,H,t_final,R,Y,T,jump,threshold,r,alpha,37)

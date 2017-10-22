@@ -1,4 +1,4 @@
-function [ARMSE,aspread] = enkfsr3(dt,ensemble,M,N,H,t_final,R,Y,T,jump,threshold,r,alpha,spy)
+function [ARMSE,aspread] = enkfsr4(dt,ensemble,M,N,H,t_final,R,Y,T,jump,threshold,r,alpha,spy)
 tic();
 
 f = @(x)(M*x.*(N*x)+(8-x));
@@ -38,7 +38,7 @@ for i=1:(q-1)
         [U,lambda] = eig(A);
         Q = sqrt(eye(ne)+lambda);
         Z = U/Q;
-        W = randomrotation(ne);
+        W = randomrotation2(ne);
         X_a = X_f*Z*W;                                    % analysis perturbations
         X = mu_a + sqrt(ne-1).*X_a;                       % analysis ensemble
         error = mu_a-T(:,jump*counter+1);
@@ -59,10 +59,10 @@ figure
 plot(time,RMSE,'*','MarkerSize',5,'Color','red')
 hold on
 plot(time,spread,'o','MarkerSize',5,'Color','blue')
-title('EnKF+RR Square Root Errors')
+title('EnKF+RR1 Square Root Errors')
 xlabel('time')
 legend('root mean square error','spread')
-print(['ErrorsSRRR1_r=',num2str(r),'_alpha=',num2str(alpha)],'-djpeg')
+print(['ErrorsSRRR_r=',num2str(r),'_alpha=',num2str(alpha)],'-djpeg')
 
 % figure
 % plot(time,spyvec,'*','MarkerSize',5,'Color','red')
