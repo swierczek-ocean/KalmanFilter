@@ -4,7 +4,7 @@ R = 1;
 obsdt = 0.1;
 threshold = [0.05:0.05:0.3];
 r = [0.1:0.05:5];
-alpha = [0:0.05:3];
+alpha = [0:0.025:3];
 set(groot, 'DefaultFigureVisible', 'off');
 
 [M,N,H,SynthDataTrue,SynthDataObs,X_start,jump] = lorenz(40,dt,t_final,8,R,obsdt);
