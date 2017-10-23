@@ -1,9 +1,9 @@
 dt = 0.01;
-t_final = 10;
+t_final = 50;
 R = 1;
 obsdt = 0.1;
-r = 3:0.2:6;
-alpha = 0.02:0.02:0.6;
+r = 3:0.2:5;
+alpha = 0.02:0.01:0.6;
 set(groot, 'DefaultFigureVisible', 'off');
 
 [M,N,H,SynthDataTrue,SynthDataObs,X_start,jump] = lorenz(40,dt,t_final,8,R,obsdt);
