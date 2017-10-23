@@ -15,7 +15,7 @@ Y = SynthDataObs;
 size(Y);
 size(T);
 
-ne=50;
+ne=200;
 ensemble = ensemble_init(dt,ne,M,N,8,X_start);
 W = randomrotation(ne);
 
@@ -23,14 +23,14 @@ W = randomrotation(ne);
 [o,rsz] = size(r);
 [o,asz] = size(alpha);
 [o,tsz] = size(threshold);
-POsearche = zeros(rsz,asz,tsz);
-SRRR1searche = zeros(rsz,asz,tsz);
-SRRRsearche = zeros(rsz,asz,tsz);
-SRsearche = zeros(rsz,asz,tsz);
-POsearchs = zeros(rsz,asz,tsz);
-SRRR1searchs = zeros(rsz,asz,tsz);
-SRRRsearchs = zeros(rsz,asz,tsz);
-SRsearchs = zeros(rsz,asz,tsz);
+POsearche = ones(rsz,asz,tsz);
+SRRR1searche = ones(rsz,asz,tsz);
+SRRRsearche = ones(rsz,asz,tsz);
+SRsearche = ones(rsz,asz,tsz);
+POsearchs = ones(rsz,asz,tsz);
+SRRR1searchs = ones(rsz,asz,tsz);
+SRRRsearchs = ones(rsz,asz,tsz);
+SRsearchs = ones(rsz,asz,tsz);
 
 for i=1:rsz
     for j=1:asz
