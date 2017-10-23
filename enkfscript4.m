@@ -4,12 +4,12 @@ R = 1;
 obsdt = 0.1;
 
 
-
-[M,N,H,SynthDataTrue,SynthDataObs,X_start,jump] = lorenz(400,dt,t_final,8,R,obsdt);
+[M,N,H,SynthDataTrue,SynthDataObs,X_start,jump] = lorenz(40,dt,t_final,8,R,obsdt);
 
 
 T = SynthDataTrue;
-Y = SynthDataObs;
+Y = load('Obs.txt');
+Y = transpose(Y);
 size(Y);
 size(T);
 
@@ -27,17 +27,6 @@ ensemble = ensemble_init(dt,ne,M,N,8,X_start);
 
 
 [ARMSE1,aspread2] = enkfsr5(dt,ensemble,M,N,H,t_final,R,Y,T,jump,3.8,0.26)
-
-
-
-
-
-
-
-
-
-
-
 
 
 
