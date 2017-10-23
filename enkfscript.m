@@ -2,9 +2,9 @@ dt = 0.01;
 t_final = 10;
 R = 1;
 obsdt = 0.1;
-threshold = [0.05,0.01];
-r = [0.1,0.2];
-alpha = [0,0.01,0.02];
+threshold = [0.01,0.02,0.03,0.04,0.05];
+r = [1,1.5,2,2.5,3];
+alpha = [0,0.01,0.02,0.03];
 set(groot, 'DefaultFigureVisible', 'off');
 
 [M,N,H,SynthDataTrue,SynthDataObs,X_start,jump] = lorenz(40,dt,t_final,8,R,obsdt);
@@ -15,7 +15,7 @@ Y = SynthDataObs;
 size(Y);
 size(T);
 
-ne=100;
+ne=50;
 ensemble = ensemble_init(dt,ne,M,N,8,X_start);
 W = randomrotation(ne);
 
