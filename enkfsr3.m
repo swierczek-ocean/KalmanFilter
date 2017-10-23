@@ -55,14 +55,14 @@ z = floor(q/2);
 ARMSE = (1/(q-1-z))*sum(transpose(RMSE(z:q-1)));
 aspread = (1/(q-1-z))*sum(transpose(spread(z:q-1)));
 
-figure
-plot(time,RMSE,'*','MarkerSize',5,'Color','red')
-hold on
-plot(time,spread,'o','MarkerSize',5,'Color','blue')
-title('EnKF+RR1 Square Root Errors')
-xlabel('time')
-legend('root mean square error','spread')
-print(['ErrorsSRRR1_r=',num2str(r),'_alpha=',num2str(alpha)],'-djpeg')
+% figure
+% plot(time,RMSE,'*','MarkerSize',5,'Color','red')
+% hold on
+% plot(time,spread,'o','MarkerSize',5,'Color','blue')
+% title('EnKF+RR1 Square Root Errors')
+% xlabel('time')
+% legend('root mean square error','spread')
+% print(['ErrorsSRRR1_r=',num2str(r),'_alpha=',num2str(alpha)],'-djpeg')
 
 % figure
 % plot(time,spyvec,'*','MarkerSize',5,'Color','red')
