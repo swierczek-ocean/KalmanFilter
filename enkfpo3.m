@@ -55,7 +55,7 @@ plot(time,spread,'o','MarkerSize',5,'Color','blue')
 title('EnKF Perturbed Obs Errors')
 xlabel('time')
 legend('root mean square error','spread')
-print('ErrorsPO','-djpeg')
+print(['ErrorsPO_r=',num2str(r),'_alpha=',num2str(alpha)],'-djpeg')
 
 % figure
 % plot(time,spyvec,'*','MarkerSize',5,'Color','red')
