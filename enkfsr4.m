@@ -1,4 +1,4 @@
-function [ARMSE,aspread] = enkfsr4(dt,ensemble,M,N,H,t_final,R,Y,T,jump,threshold,r,alpha,spy)
+function [ARMSE,aspread] = enkfsr4(dt,ensemble,M,N,H,t_final,R,Y,T,jump,r,alpha,spy)
 tic();
 
 f = @(x)(M*x.*(N*x)+(8-x));
@@ -27,7 +27,7 @@ for i=1:(q-1)
         x_f = mu_f + sqrt(1+alpha).*(X-mu_f);             % ensemble inflation
         X_f = (x_f - mu_f).*(1/sqrt(ne-1));               % forecast perturbations
         P_f = X_f*transpose(X_f);                         % forecast covariance
-        L = localize(P_f,threshold,r);                    % creating localization matrix L
+        L = localize2(P_f,r);                             % creating localization matrix L
         P_f = L.*P_f;                                     % localization
         K = P_f*(H')/(H*P_f*(H') + Rm);                   % Kalman Gain
         mu_a = mu_f + K*(Y(:,counter+1)-H*mu_f);          % analysis mean
