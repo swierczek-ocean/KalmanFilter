@@ -70,8 +70,12 @@ Result = [Result;minSRRR1,r(i2),alpha(j2),threshold(k2),SRRR1searchs(i2,j2,k2)];
 Result = [Result;minSRRR,r(i3),alpha(j3),threshold(k3),SRRRsearchs(i3,j3,k3)];
 Result = [Result;minSR,r(i4),alpha(j4),threshold(k4),SRsearchs(i4,j4,k4)];
 
-save POsearch
-save SRRR1search
-save SRRRsearch
-save SRsearch
+save POsearche
+save SRRR1searche
+save SRRRsearche
+save SRsearche
+save POsearchs
+save SRRR1searchs
+save SRRRsearchs
+save SRsearchs
 save Result
