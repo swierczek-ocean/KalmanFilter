@@ -1,5 +1,5 @@
 dt = 0.01;
-t_final = 20;
+t_final = 24;
 R = 1;
 obsdt = 0.1;
 r = 3:0.1:5;
