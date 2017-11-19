@@ -1,9 +1,9 @@
-function [argh,Jaco] = argh(x_0)
-B = 0.5.*(B+B');
-[U,lambda] = eig(B);
-Q = U*sqrt(lambda);
-[x_out,TimeSeries] = MRK2(x,dt,obsdt,jump)
-argh = [Q*(x_0-mean);(H*x_out-y_t)./sqrt(R)];
-Jaco = [Q;H*Mlin(TimeSeries,dt,obsdt,jump)./sqrt(R)];
+function [arrr,Jaco] = argh(x_0)
+global H, global bcov, global bmean, global y_t
+global n, global R
+B = 0.5.*(bcov+bcov');
+[x_out,TimeSeries] = MRK2(x_0);
+arrr = [sqrtm(B)\(x_0-bmean);(H*x_out-y_t)./sqrt(R)];
+Jaco = [sqrtm(B)\eye(n);H*Mlin(TimeSeries)./sqrt(R)];
 end
 

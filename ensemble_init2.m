@@ -1,5 +1,4 @@
 function ensemble = ensemble_init2(dt,ne,X_start)
-tic();
 num_iter = 1000/dt;
 rando = randperm(num_iter,ne);
 X = X_start;
@@ -17,6 +16,5 @@ for i=1:num_iter
    end
 end
 
-toc()
 end
 

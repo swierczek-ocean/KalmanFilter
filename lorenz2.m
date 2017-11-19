@@ -1,7 +1,8 @@
-function [SynthDataTrue,SynthDataObs,X_start] = lorenz2(n,dt,t_final,R,jump)
-tic();
+function [SynthDataTrue,SynthDataObs,X_start] = lorenz2(n,t_final)
+global L1, global L2, global H, global F,
+global dt, global jump, global R
 
-X = unifrnd(-1,1,n,1);
+X = normrnd(0,1,n,1);
 init_iter = ceil(100/dt);
 numiter = ceil(t_final/dt);
 w = floor(numiter/jump);
@@ -27,11 +28,8 @@ SynthDataTrue(:,1)=X;
 SynthDataObs = zeros(n/2,w);
 
 for i=2:numiter
-   k1=f(X);
-   k2=f(X+0.5*dt.*k1);
-   k3=f(X+0.5*dt.*k2);
-   k4=f(X+dt.*k3);
-   X = X + (1/6)*dt.*(k1+2.*k2+2.*k3+k4);
+   k = f(X) + f(X+dt.*f(X)); 
+   X = X + 0.5*dt.*k;
    SynthDataTrue(:,i)=X;
 end 
 
@@ -39,6 +37,5 @@ for i=1:floor(numiter/jump)
    SynthDataObs(:,i) = H*SynthDataTrue(:,jump*(i-1)+1) + normrnd(0,R,n/2,1); 
 end
 
-toc()
 end
 

@@ -1,19 +1,20 @@
-function ensemble = ensemble_init3(dt,X_start)
-tic();
-num_iter = 1000/dt;
+function ensemble = ensemble_init3(X_start)
+global L1, global L2, global F, global dt, global bg, global n
 
+num_iter = 3000/dt;
+rando = randperm(num_iter,bg);
 X = X_start;
 f = @(x)(L1*x.*(L2*x)+(F-x));
-ensemble = [];
+ensemble = zeros(n,bg);
+t=1;
 
 for i=1:num_iter
-   k1=f(X);
-   k2=f(X+0.5*dt.*k1);
-   k3=f(X+0.5*dt.*k2);
-   k4=f(X+dt.*k3);
-   X = X + (1/6)*dt.*(k1+2.*k2+2.*k3+k4);
-   ensemble = [ensemble,X];
+   k = f(X) + f(X+dt.*f(X)); 
+   X = X + 0.5*dt.*k;
+   if(sum(i==rando)==1)
+       ensemble(:,t) = X;
+       t=t+1;
+   end
 end
 
-toc()
 end
