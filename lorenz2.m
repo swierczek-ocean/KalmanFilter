@@ -1,7 +1,6 @@
-function [SynthDataTrue,SynthDataObs,X_start,jump] = lorenz2(n,dt,t_final,F,R,obsdt,L1,L2,H)
+function [SynthDataTrue,SynthDataObs,X_start] = lorenz2(n,dt,t_final,R,jump)
 tic();
 
-jump = ceil(obsdt/dt);
 X = unifrnd(-1,1,n,1);
 init_iter = ceil(100/dt);
 numiter = ceil(t_final/dt);
