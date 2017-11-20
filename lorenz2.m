@@ -3,7 +3,7 @@ global L1, global L2, global H, global F,
 global dt, global jump, global R
 
 X = normrnd(0,1,n,1);
-init_iter = ceil(100/dt);
+init_iter = ceil(1000/dt);
 numiter = ceil(t_final/dt);
 w = floor(numiter/jump);
 

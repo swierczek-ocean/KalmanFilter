@@ -6,10 +6,10 @@ obsdt=0.2;
 ne=20;
 jump = ceil(obsdt/dt);
 R=1;
-t_final=10;
+t_final=25;
 SampleSize=100;
 
-colors
+run(colors)
 
 global L1, global L2, global H, global F
 F = 8;
@@ -73,8 +73,11 @@ h3=plot(1:40,SynthDataTrue(:,21),'Color',Color(:,9),'Linewidth',3.5);
 h4=plot(1:2:39,SynthDataObs(:,2),'*','MarkerSize',10,'Color','y');
 title('True vs. M(Prior) vs. M(Posterior) vs. Obs at time t')
 xlabel('dimension')
-legend([h1(1),h2(1),h3(1),h4(1)],'posterior','prior','true','obs')
+legend([h1(1),h2(1),h3(1),h4(1)],'prior','posterior','true','obs')
 print('prior_vs_posterior_vs_obs at time t','-djpeg')
 
 
-
+RMSE_Background0=sqrt(1/n*sum((SynthDataTrue(:,1)-bmean).^2))
+RMSE_x0=sqrt(1/n*sum((SynthDataTrue(:,1)-x_star).^2))
+RMSE_BackgroundT=sqrt(1/n*sum((SynthDataTrue(:,21)-MRK2(bmean)).^2))
+RMSE_xT=sqrt(1/n*sum((SynthDataTrue(:,21)-x_start).^2))
