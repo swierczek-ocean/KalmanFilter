@@ -1,6 +1,4 @@
-function [SynthDataTrue,SynthDataObs,X_start] = lorenz2(n,t_final)
-global L1, global L2, global H, global F,
-global dt, global jump, global R
+function [SynthDataTrue,SynthDataObs,X_start] = lorenz2(n,t_final,L1,L2,H,F,dt,jump,R)
 
 X = normrnd(0,1,n,1);
 init_iter = ceil(1000/dt);

@@ -1,5 +1,4 @@
-function ensemble = ensemble_init4(X_start)
-global L1, global L2, global F, global dt, global ne, global n
+function ensemble = ensemble_init4(X_start,L1,L2,F,dt,ne,n)
 
 num_iter = 3000/dt;
 rando = randperm(num_iter,ne);

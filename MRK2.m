@@ -1,6 +1,4 @@
-function [x_out,TimeSeries] = MRK2(x)
-global L1, global L2, global F, global n
-global dt, global jump
+function [x_out,TimeSeries] = MRK2(x,L1,L2,F,n,dt,jump)
 
 f = @(x)(L1*x.*(L2*x)+(F-x));
 TimeSeries = [x,zeros(n,jump)];

@@ -1,4 +1,4 @@
-global n, global dt, global obsdt, global ne, global jump, global R, global bg
+% global n, global dt, global obsdt, global ne, global jump, global R, global bg
 bg=3000;
 n=40;
 dt=0.01;
@@ -7,17 +7,17 @@ ne=20;
 jump = ceil(obsdt/dt);
 R=1;
 t_final=25;
-r=4;
-alpha=0.14;
+r=1;
+alpha=0.15;
 spy=17;
 spl=100;
 Rm = R*eye(20);
 
-global L1, global L2, global H, global F
+% global L1, global L2, global H, global F
 F = 8;
 [L1,L2,H] = prelim(n);
 
-[SynthDataTrue,SynthDataObs,X_start] = lorenz2(n,t_final);
+[SynthDataTrue,SynthDataObs,X_start] = lorenz2(n,t_final,L1,L2,H,F,dt,jump,R);
 
 T = SynthDataTrue(:,1:spl*jump);
 Y = SynthDataObs(:,1:spl);
@@ -30,7 +30,7 @@ j2 = size(Y2,2);
 RMSE = zeros(1,j2);
 spread = zeros(1,j2);
 
-ensemble = ensemble_init4(X_start);
+ensemble = ensemble_init4(X_start,L1,L2,F,dt,ne,n);
 [ARMSE,aspread,X_a,mu_a,P_a] = enkfpo4(ensemble,Y,T,r,alpha,spy);
 
 ne=19;

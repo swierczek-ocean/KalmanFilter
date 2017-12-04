@@ -1,4 +1,4 @@
-global n, global dt, global obsdt, global ne, global jump, global R, global bg
+colors
 bg=3000;
 n=40;
 dt=0.01;
@@ -8,33 +8,26 @@ jump = ceil(obsdt/dt);
 R=1;
 t_final=25;
 SampleSize=100;
-
-run(colors)
-
-global L1, global L2, global H, global F
 F = 8;
 [L1,L2,H] = prelim(n);
 
 tic()
-[SynthDataTrue,SynthDataObs,X_start] = lorenz2(n,t_final);
+[SynthDataTrue,SynthDataObs,X_start] = lorenz3(n,t_final,L1,L2,H,F,dt,jump,R);
 toc()
 tic()
-ensemble = ensemble_init3(X_start);
+ensemble = ensemble_init3(X_start,L1,L2,F,dt,bg,n);
 toc()
 size(ensemble)
 
-global bmean
-global bcov
-bmean = transpose(mean(transpose(ensemble)));
-bcov = (ensemble-bmean)*transpose(ensemble-bmean)./(bg-1);
+bmean = mean(ensemble,2);
+bcov = cov(ensemble');
 
 x_0 = bmean;
-global y_t
 y_t = SynthDataObs(:,2);
-[x_start,x_star,TimeSeries] = fdvar(x_0);
+[x_start,x_star,TimeSeries] = fdvar(x_0,dt,jump,L1,L2,H,bcov,bmean,y_t,n,R,F);
 
-[arrr,Jaco] = argh(x_star);
-M = Mlin(TimeSeries);
+[arrr,Jaco] = argh(x_star,H,bcov,bmean,y_t,n,R,L1,L2,F,dt,jump);
+M = Mlin3(TimeSeries,L1,L2,F,n,dt,jump);
 Bcov_star = (2.*Jaco'*Jaco)\eye(n);
 
 px0=zeros(n,SampleSize);
@@ -49,7 +42,7 @@ P = 0.5.*(P+P');
 for i=1:SampleSize
     px0(:,i)=bmean+sqrtm(bcov)*randn(40,1);
     px0y(:,i)=x_star + sqrtm(Bcov_star)*randn(40,1);
-    pxT(:,i)=MRK2(bmean) + sqrtm(P)*randn(40,1);
+    pxT(:,i)=MRK3(bmean,L1,L2,F,n,dt,jump) + sqrtm(P)*randn(40,1);
     pxTy(:,i)=x_start+sqrtm(M*Bcov_star\M')*randn(40,1);
 end
 
@@ -79,5 +72,5 @@ print('prior_vs_posterior_vs_obs at time t','-djpeg')
 
 RMSE_Background0=sqrt(1/n*sum((SynthDataTrue(:,1)-bmean).^2))
 RMSE_x0=sqrt(1/n*sum((SynthDataTrue(:,1)-x_star).^2))
-RMSE_BackgroundT=sqrt(1/n*sum((SynthDataTrue(:,21)-MRK2(bmean)).^2))
+RMSE_BackgroundT=sqrt(1/n*sum((SynthDataTrue(:,21)-MRK3(bmean,L1,L2,F,n,dt,jump)).^2))
 RMSE_xT=sqrt(1/n*sum((SynthDataTrue(:,21)-x_start).^2))
