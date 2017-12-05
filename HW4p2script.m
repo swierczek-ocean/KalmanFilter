@@ -1,3 +1,4 @@
+tic();
 colors
 bg=3000;
 n=40;
@@ -7,9 +8,9 @@ ne=20;
 jump = ceil(obsdt/dt);
 R=1;
 t_final=100;
-r=4;
+r=3.8;
 alpha=0.1;
-spy=16;
+spy=12;
 spl=100;
 Rm = R*eye(ne);
 F = 8;
@@ -62,7 +63,7 @@ h2=plot(1:j2-1,spread,'o','MarkerSize',7,'Color',Color(:,8));
 title('4DVar Errors')
 xlabel('time')
 legend([h1(1),h2(1)],'root mean square error','spread')
-print(['ErrorsPO_r=',num2str(r),'_alpha=',num2str(alpha)],'-djpeg')
+print(['4DVar_r=',num2str(r),'_alpha=',num2str(alpha)],'-djpeg')
 hold off
 
 figure
@@ -72,9 +73,10 @@ h2=plot(1:j2-1,T2(spy,indices),'o','MarkerSize',7,'Color',Color(:,14));
 title(['True Data vs. 4DVar Estimate in coordinate ', num2str(spy)])
 xlabel('time')
 legend([h1(1),h2(1)],'Kalman','True')
-print('KalmanvsTrue','-djpeg')
+print('4DVarvsTrue','-djpeg')
 hold off
 
 
-average_RMSE = mean(RMSE(30:end))
+average_RMSE = mean(RMSE(100:end))
 
+toc()
