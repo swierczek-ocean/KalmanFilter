@@ -11,6 +11,7 @@ spread = [];
 Rm = R*eye(m);
 time = [1:1:a-1];
 counter = 0;
+L = localize2(n,r);
 % spyvec = zeros(1,a-1);
 % indices = [];
 
@@ -27,7 +28,6 @@ for i=1:(q-1)
         x_f = mu_f + sqrt(1+alpha).*(X-mu_f);             % ensemble inflation
         X_f = (x_f - mu_f).*(1/sqrt(ne-1));               % forecast perturbations
         P_f = X_f*transpose(X_f);                         % forecast covariance
-        L = localize2(P_f,r);                             % creating localization matrix L
         P_f = L.*P_f;                                     % localization
         K = P_f*(H')/(H*P_f*(H') + Rm);                   % Kalman Gain
         mu_a = mu_f + K*(Y(:,counter+1)-H*mu_f);          % analysis mean

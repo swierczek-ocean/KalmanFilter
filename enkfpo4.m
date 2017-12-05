@@ -1,6 +1,4 @@
-function [ARMSE,aspread,X_a,mu_a,P_a] = enkfpo4(ensemble,Y,T,r,alpha,spy)
-global L1, global L2, global H, global R, global dt, global jump
-global n, global ne, 
+function [ARMSE,aspread,X_a,mu_a,P_a] = enkfpo4(ensemble,Y,T,r,alpha,spy,L1,L2,H,R,dt,jump,n,ne)
 
 colors
 f = @(x)(L1*x.*(L2*x)+(8-x));
@@ -10,35 +8,41 @@ X = ensemble;
 RMSE = [];
 spread = [];
 Rm = R*eye(m);
-time = [1:1:a-1];
+time = 1:a;
 counter = 0;
 spyvec = zeros(1,a-1);
 indices = [];
+L = localize2(n,r);
 
-for i=1:(q-1)
-    k = f(X) + f(X+dt.*f(X)); 
-    X = X + 0.5*dt.*k;              % forecast ensemble
+for i=1:q
+%     k1 = f(X);
+%     k2 = f(X+0.5*dt.*k1);
+%     k3 = f(X+2*dt.*k2 -dt.*k1);
+%     X = X + dt.*((1/6).*k1+(2/3).*k2+(1/6).*k3);      % forecast ensemble
     
-    if(mod(i,jump)==0)
-        counter = counter + 1;
-        mu_f = (1/ne).*transpose(sum(transpose(X)));        % forecast mean
-        x_f = mu_f + sqrt(1+alpha).*(X-mu_f);               % ensemble inflation
-        X_f = (x_f - mu_f).*(1/sqrt(ne-1));                 % forecast perturbations
-        P_f = X_f*transpose(X_f);                           % forecast covariance
-        L = localize2(P_f,r);                               % creating localization matrix L
-        P_f = L.*P_f;                                       % localization
-        K = P_f*(H')/(H*P_f*H' + Rm);                       % Kalman Gain
-        Y_tilde = Y(:,counter+1)+normrnd(0,R,m,ne);         % analysis perturbations
-        X_a = X + K*(Y_tilde-H*X);                          % analysis ensemble
-        mu_a = mu_f + K*(Y(:,counter+1)-H*mu_f);            % analysis mean
-        P_a = (eye(n)-K*H)*P_f;                             % analysis covariance
-        error = mu_a-T(:,jump*counter+1);
-        RMSE = [RMSE,sqrt((1/n).*transpose(error)*error)];
-        spread = [spread,sqrt(trace(P_a)/n)];
-        spyvec(counter) = mu_a(spy);
-        indices = [indices,i];
-        X = X_a;
-    end
+if(mod(i,jump)==1)
+    counter = counter + 1;
+    mu_f = mean(X,2);                                   % forecast mean
+    P_f = cov(X');                                      % forecast covariance
+    P_f = (1+alpha).*L.*P_f;                            % localization
+    K = P_f*(H')/(H*P_f*H' + Rm);                       % Kalman Gain
+    Y_tilde = Y(:,counter)+normrnd(0,R,m,ne);           % analysis perturbations
+    X_a = X + K*(Y_tilde-H*X);                          % analysis ensemble
+    mu_a = mu_f + K*(Y(:,counter)-H*mu_f);              % analysis mean
+    P_a = (eye(n)-K*H)*P_f;                             % analysis covariance
+    error = mu_a-T(:,jump*(counter-1)+1);
+    RMSE = [RMSE,sqrt((1/n).*transpose(error)*error)];
+    spread = [spread,sqrt(trace(P_a)/n)];
+    spyvec(counter) = mu_a(spy);
+    indices = [indices,i];
+    X = X_a;
+    
+end
+k1 = f(X);
+k2 = f(X+0.5*dt.*k1);
+k3 = f(X+2*dt.*k2 -dt.*k1);
+X = X + dt.*((1/6).*k1+(2/3).*k2+(1/6).*k3);      % forecast ensemble
+    
 end
 
 [m,q] = size(RMSE);

@@ -1,5 +1,5 @@
-function L = localize2(P,r)
-[n,m] = size(P);
+function L = localize2(n,r)
+
 L = zeros(n,n);
 
 
