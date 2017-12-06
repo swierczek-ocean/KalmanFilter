@@ -50,25 +50,25 @@ z = floor(q/2);
 ARMSE = (1/(q-1-z))*sum(transpose(RMSE(z:q-1)));
 aspread = (1/(q-1-z))*sum(transpose(spread(z:q-1)));
 
-figure
-h1=plot(time,RMSE,'*','MarkerSize',7,'Color',Color(:,9));
-hold on
-h2=plot(time,spread,'o','MarkerSize',7,'Color',Color(:,8));
-title('EnKF Perturbed Obs Errors')
-xlabel('time')
-legend([h1(1),h2(1)],'root mean square error','spread')
-print(['ErrorsPO_r=',num2str(r),'_alpha=',num2str(alpha)],'-djpeg')
-hold off
-
-figure
-h1=plot(time,spyvec,'*','MarkerSize',7,'Color',Color(:,7));
-hold on
-h2=plot(time,T(spy,indices),'o','MarkerSize',7,'Color',Color(:,14));
-title(['True Data vs. Kalman Estimate in coordinate ', num2str(spy)])
-xlabel('time')
-legend([h1(1),h2(1)],'Kalman','True')
-print('KalmanvsTrue','-djpeg')
-hold off
+% figure
+% h1=plot(time,RMSE,'*','MarkerSize',7,'Color',Color(:,9));
+% hold on
+% h2=plot(time,spread,'o','MarkerSize',7,'Color',Color(:,8));
+% title('EnKF Perturbed Obs Errors')
+% xlabel('time')
+% legend([h1(1),h2(1)],'root mean square error','spread')
+% print(['ErrorsPO_r=',num2str(r),'_alpha=',num2str(alpha)],'-djpeg')
+% hold off
+% 
+% figure
+% h1=plot(time,spyvec,'*','MarkerSize',7,'Color',Color(:,7));
+% hold on
+% h2=plot(time,T(spy,indices),'o','MarkerSize',7,'Color',Color(:,14));
+% title(['True Data vs. Kalman Estimate in coordinate ', num2str(spy)])
+% xlabel('time')
+% legend([h1(1),h2(1)],'Kalman','True')
+% print('KalmanvsTrue','-djpeg')
+% hold off
 
 end
 
