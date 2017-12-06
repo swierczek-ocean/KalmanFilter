@@ -7,11 +7,11 @@ obsdt=0.2;
 ne=20;
 jump = ceil(obsdt/dt);
 R=1;
-t_final=100;
+t_final=60;
 r=3;
 alpha=0.1;
-spy=12;
-spl=100;
+spy=8;
+spl=200;
 Rm = R*eye(ne);
 F = 8;
 [L1,L2,H] = prelim(n);
@@ -37,7 +37,6 @@ aspread
 X=X_a;
 
 bmean=mu_a;
-x0=bmean;
 bcov=P_a;
 spyvec = zeros(1,j2-1);
 indices = zeros(1,j2-1);
@@ -45,12 +44,23 @@ L = localize2(n,r);
 
 for i=1:j2-1
     y_t = Y2(:,i+1);
-    [xT,x0] = fdvar(x0,dt,jump,L1,L2,H,bcov,bmean,y_t,n,R,F);
-    [X,bmean,bcov] = ENKFPO(X,dt,jump,n,ne,H,R,L1,L2,F,r,alpha,y_t);
-    x0=xT;
-    X = X-bmean+xT;
+    [xT,~] = fdvar(bmean,dt,jump,L1,L2,H,bcov,bmean,y_t,n,R,F);
+    X(:,1) = xT;
     error = xT-T2(:,jump*i+1);
     RMSE(i) = sqrt((1/n).*transpose(error)*error);
+    bcov = 0.5.*(bcov +bcov');
+    bcov = sqrtm(bcov);
+    for j=2:ne
+        PertMean = bmean +bcov*normrnd(0,1,n,1);
+        PertObs = y_t + eye(n/2)*normrnd(0,1,n/2,1);
+        [xT,~] = fdvar(PertMean,dt,jump,L1,L2,H,bcov,bmean,PertObs,n,R,F);
+        X(:,j) = xT;
+    end
+    bmean = X(:,1);
+    EnMean = mean(X,2);
+    X = EnMean + sqrt(1+alpha).*(X-EnMean);
+    bcov = cov(X');
+    bcov = L.*bcov;
     spread(i) = sqrt(trace(bcov)/n);
     spyvec(i) = xT(spy);
     indices(i) = i*jump+1;
@@ -60,23 +70,24 @@ figure
 h1=plot(1:j2-1,RMSE,'*','MarkerSize',7,'Color',Color(:,9));
 hold on
 h2=plot(1:j2-1,spread,'o','MarkerSize',7,'Color',Color(:,8));
-title('4DVar Errors')
+title('EDA Errors')
 xlabel('time')
 legend([h1(1),h2(1)],'root mean square error','spread')
-print(['4DVar_r=',num2str(r),'_alpha=',num2str(alpha)],'-djpeg')
+print(['EDA_r=',num2str(r),'_alpha=',num2str(alpha)],'-djpeg')
 hold off
 
 figure
 h1=plot(1:j2-1,spyvec,'*','MarkerSize',7,'Color',Color(:,7));
 hold on
 h2=plot(1:j2-1,T2(spy,indices),'o','MarkerSize',7,'Color',Color(:,14));
-title(['True Data vs. 4DVar Estimate in coordinate ', num2str(spy)])
+title(['True Data vs. EDA Estimate in coordinate ', num2str(spy)])
 xlabel('time')
 legend([h1(1),h2(1)],'Kalman','True')
-print('4DVarvsTrue','-djpeg')
+print('EDAvsTrue','-djpeg')
 hold off
 
 
-average_RMSE = mean(RMSE(75:end))
+average_RMSE = mean(RMSE(floor(end/2):end))
 
 toc()
+
