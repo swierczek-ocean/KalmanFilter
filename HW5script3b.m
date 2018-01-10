@@ -3,7 +3,7 @@ colors
 eps = 0.1;
 Ne = 100000;
 nexp = 100;
-n = 25:25:1000;
+n = 10:45:1000;
 sz = size(n,2);
 sigsq = 1+eps;
 sig = sqrt(sigsq);
