@@ -31,7 +31,7 @@ plot(n,rho,'Color',Color(:,19),'Linewidth',2)
 title('n vs. rho')
 xlabel('n')
 ylabel('rho')
-print('prior_vs_posterior_vs_obs at time t','-djpeg')
+print('n vs. rho','-djpeg')
 output = [n',rho];
 save output
 
