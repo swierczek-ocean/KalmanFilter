@@ -3,12 +3,13 @@ colors
 eps = 0.1;
 Ne = 100000;
 nexp = 100;
-n = 10:45:1000;
+n = 10:99:1000;
 sz = size(n,2);
 sigsq = 1+eps;
 sig = sqrt(sigsq);
 rho = zeros(sz,1);
 rhoTemp = zeros(nexp,1);
+output = [];
 
 
 for ii=1:sz   
@@ -25,6 +26,8 @@ for ii=1:sz
         rhoTemp(jj) = X/Y;
     end
     rho(ii) = mean(rhoTemp);
+    output = [output;n(ii),rho(ii)];
+    save output
 end
 
 plot(n,rho,'Color',Color(:,19),'Linewidth',2)
@@ -32,7 +35,6 @@ title('n vs. rho')
 xlabel('n')
 ylabel('rho')
 print('n vs. rho','-djpeg')
-output = [n',rho];
-save output
+
 
 toc()
