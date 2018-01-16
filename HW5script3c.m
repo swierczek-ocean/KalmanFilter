@@ -9,7 +9,7 @@ sigsq = 1+eps;
 sig = sqrt(sigsq);
 rho = zeros(sz,1);
 rhoTemp = zeros(nexp,1);
-output = zeros(sz,2);
+Output = zeros(sz,2);
 count = 0;
 
 for ii=1:sz   
@@ -18,7 +18,7 @@ for ii=1:sz
         x = normrnd(0,sig,Ne,n(ii));
         W = zeros(Ne,1);
         Wsq = zeros(Ne,1);
-        for kk=1:Ne
+        parfor kk=1:Ne
             W(kk) = multn(x(kk,:),0,1)/multn(x(kk,:),0,sigsq);
             Wsq(kk) = W(kk)^2;
         end
@@ -27,7 +27,7 @@ for ii=1:sz
         rhoTemp(jj) = X/Y;
     end
     rho(ii) = mean(rhoTemp);
-    output(ii,:) = [n(ii),rho(ii)];
+    Output(ii,:) = [n(ii),rho(ii)]
     count = count + 1
     toc()
 end
@@ -38,4 +38,4 @@ xlabel('n')
 ylabel('rho')
 print('n vs. rho','-djpeg')
 
-save output
+save Output

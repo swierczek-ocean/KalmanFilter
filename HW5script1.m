@@ -1,7 +1,7 @@
 tic()
 
 format long g
-Ne = 2000000:1:2000005;
+Ne = 3000000;
 n = 1000;
 Nesz = size(Ne,2);
 
@@ -27,8 +27,10 @@ for ii=1:Nesz
     end
     e(ii) = sum(evec)/n;
     Output = [Output;Ne(ii),e(ii)*100];
-    save Output
+    
 end
+
+save Output
 
 toc()
 

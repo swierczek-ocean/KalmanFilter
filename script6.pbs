@@ -12,4 +12,4 @@ module load matlab
 
 cd ~/KalmanFilter/
 
-matlab -nodisplay -nosplash < HW5script3b.m > output.txt
+matlab -nodisplay -nosplash < HW5script3c.m > output.txt
