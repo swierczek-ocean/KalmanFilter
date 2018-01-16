@@ -1,7 +1,7 @@
 
 colors
 eps = 0.1;
-Ne = 10000;
+Ne = 100000;
 nexp = 100;
 n = 1000:-10:10;
 sz = size(n,2);
@@ -36,6 +36,6 @@ plot(n,rho,'Color',Color(:,19),'Linewidth',2)
 title('n vs. rho')
 xlabel('n')
 ylabel('rho')
-print('n vs. rho','-djpeg')
+print('n_vs_rho','-djpeg')
 
 save output

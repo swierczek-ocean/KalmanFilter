@@ -4,14 +4,14 @@ bg=3000;
 n=40;
 dt=0.01;
 obsdt=0.2;
-ne=20;
+ne=40;
 jump = ceil(obsdt/dt);
-R=1;
-t_final=60;
-r=3;
+R=0.5;
+t_final=30;
+r=5;
 alpha=0.1;
 spy=8;
-spl=200;
+spl=100;
 Rm = R*eye(ne);
 F = 8;
 [L1,L2,H] = prelim(n);
@@ -36,6 +36,9 @@ aspread
 
 X=X_a;
 
+r=4.2;
+alpha=0.05;
+
 bmean=mu_a;
 bcov=P_a;
 spyvec = zeros(1,j2-1);
@@ -50,12 +53,14 @@ for i=1:j2-1
     RMSE(i) = sqrt((1/n).*transpose(error)*error);
     bcov = 0.5.*(bcov +bcov');
     bcov = sqrtm(bcov);
+    tic()
     for j=2:ne
         PertMean = bmean +bcov*normrnd(0,1,n,1);
         PertObs = y_t + eye(n/2)*normrnd(0,1,n/2,1);
         [xT,~] = fdvar(PertMean,dt,jump,L1,L2,H,bcov,bmean,PertObs,n,R,F);
         X(:,j) = xT;
     end
+    toc()
     bmean = X(:,1);
     EnMean = mean(X,2);
     X = EnMean + sqrt(1+alpha).*(X-EnMean);

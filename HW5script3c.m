@@ -1,7 +1,7 @@
 
 colors
 eps = 0.1;
-Ne = 10000;
+Ne = 100000;
 nexp = 100;
 n = 1000:-10:10;
 sz = size(n,2);
@@ -9,7 +9,7 @@ sigsq = 1+eps;
 sig = sqrt(sigsq);
 rho = zeros(sz,1);
 rhoTemp = zeros(nexp,1);
-Output = zeros(sz,2);
+outputp = zeros(sz,2);
 count = 0;
 
 for ii=1:sz   
@@ -27,7 +27,7 @@ for ii=1:sz
         rhoTemp(jj) = X/Y;
     end
     rho(ii) = mean(rhoTemp);
-    Output(ii,:) = [n(ii),rho(ii)]
+    outputp(ii,:) = [n(ii),rho(ii)]
     count = count + 1
     toc()
 end
@@ -36,6 +36,6 @@ plot(n,rho,'Color',Color(:,19),'Linewidth',2)
 title('n vs. rho')
 xlabel('n')
 ylabel('rho')
-print('n vs. rho','-djpeg')
+print('n_vs_rho_p','-djpeg')
 
-save Output
+save outputp

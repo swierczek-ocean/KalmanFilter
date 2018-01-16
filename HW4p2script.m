@@ -8,8 +8,8 @@ ne=20;
 jump = ceil(obsdt/dt);
 R=1;
 t_final=100;
-r=3;
-alpha=0.1;
+r=4.2;
+alpha=0.05;
 spy=12;
 spl=100;
 Rm = R*eye(ne);
@@ -77,6 +77,6 @@ print('4DVarvsTrue','-djpeg')
 hold off
 
 
-average_RMSE = mean(RMSE(75:end))
+average_RMSE = mean(RMSE(floor(end/2):end))
 
 toc()
