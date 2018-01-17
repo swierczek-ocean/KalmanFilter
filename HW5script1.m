@@ -1,7 +1,7 @@
 tic()
 
 format long g
-Ne = 3000000;
+Ne = [3000000,4000000,5000000,6000000,7000000,8000000,9000000];
 n = 1000;
 Nesz = size(Ne,2);
 
@@ -12,21 +12,21 @@ funq = @(x)(exp(-(x^2)/2)/sqrt(2*pi));
 % Efx = integral(funp,4,Inf);
 Efx = 0.0227501319481792;
 e = zeros(Nesz,1);
-Output = [];
+Output1 = [];
 
 for ii=1:Nesz
     X = zeros(Ne(ii),1);
     evec = zeros(n,1);
     for jj=1:n
         x = normrnd(0,1,Ne(ii),1);
-        for kk=1:Ne(ii)
+        parfor kk=1:Ne(ii)
             X(kk) = funf(x(kk))*funp(x(kk))/funq(x(kk));
         end
         Ehat = sum(X)/Ne(ii);
         evec(jj) = abs(Efx-Ehat)/abs(Efx);
     end
     e(ii) = sum(evec)/n;
-    Output = [Output;Ne(ii),e(ii)*100];
+    Output1 = [Output1;Ne(ii),e(ii)*100];
     
 end
 
