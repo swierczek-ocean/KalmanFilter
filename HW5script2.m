@@ -1,5 +1,5 @@
 tic()
-Ne = 3000;
+Ne = 2000;
 n = 1000;
 Nesz = size(Ne,2);
 
