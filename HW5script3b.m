@@ -19,7 +19,7 @@ for ii=1:sz
         W = zeros(Ne,1);
         Wsq = zeros(Ne,1);
         for kk=1:Ne
-            W(kk) = multn(x(kk,:),0,1)/multn(x(kk,:),0,sigsq);
+            W(kk) = divgauss(0,1,0,sigsq,x(kk));
             Wsq(kk) = W(kk)^2;
         end
         X = sum(Wsq)/Ne;

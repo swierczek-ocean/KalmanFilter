@@ -17,7 +17,11 @@ for ii=1:Nesz
     for jj=1:n
         x = normrnd(2,1,Ne(ii),1);
         for kk=1:Ne(ii)
-           X(kk) = funf(x(kk))*funp(x(kk))/funq(x(kk));              
+            if(x(kk)<4)
+                X(kk) = 0;
+            else
+                X(kk) = funf(x(kk))*divgauss1(0,2,2,1,x(kk));
+            end
         end
         Ehat = sum(X)/Ne(ii);
         evec(jj) = abs(Efx-Ehat)/abs(Efx);

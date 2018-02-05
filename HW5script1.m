@@ -1,7 +1,7 @@
 tic()
 
 format long g
-Ne = [3000000,4000000,5000000,6000000,7000000,8000000,9000000];
+Ne = [1000000:1000000:15000000];
 n = 1000;
 Nesz = size(Ne,2);
 
@@ -19,18 +19,22 @@ for ii=1:Nesz
     evec = zeros(n,1);
     for jj=1:n
         x = normrnd(0,1,Ne(ii),1);
-        parfor kk=1:Ne(ii)
-            X(kk) = funf(x(kk))*funp(x(kk))/funq(x(kk));
+        for kk=1:Ne(ii)
+            if(x(kk)<4)
+                X(kk) = 0;
+            else 
+                X(kk) = funf(x(kk))*divgauss1(0,2,0,1,x(kk));
+            end
         end
         Ehat = sum(X)/Ne(ii);
         evec(jj) = abs(Efx-Ehat)/abs(Efx);
     end
     e(ii) = sum(evec)/n;
-    Output1 = [Output1;Ne(ii),e(ii)*100];
+    Output1 = [Output1;Ne(ii),e(ii)*100]
     
 end
 
-save Output
+
 
 toc()
 
