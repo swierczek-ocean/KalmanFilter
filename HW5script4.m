@@ -29,8 +29,8 @@ for ll=1:nexp
 % X = normrnd(-1,sqrt(2),Ne,1);
 
 % proposal #5: Gaussian that has support away from where p is large, rho ~ 6000
-funq = @(x)(exp(-(x-2).^2/.08)/sqrt(.08*pi));
-X = normrnd(2,.2,Ne,1);
+% funq = @(x)(exp(-(x-2).^2/.08)/sqrt(.08*pi));
+% X = normrnd(2,.2,Ne,1);
 
 % proposal #6: Uniform random variables on (-4,8), rho ~ 1.99
 % funq = @(x)(1/12);
