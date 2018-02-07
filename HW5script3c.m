@@ -15,7 +15,7 @@ count = 0;
 for ii=1:sz   
     tic()
     for jj=1:nexp
-        x = normrnd(0,sig,Ne,n(ii));
+        x = sig.*randn(Ne,n(ii));
         W = zeros(Ne,1);
         Wsq = zeros(Ne,1);
         parfor kk=1:Ne
@@ -27,8 +27,8 @@ for ii=1:sz
         rhoTemp(jj) = X/Y;
     end
     rho(ii) = mean(rhoTemp);
-    outputp(ii,:) = [n(ii),rho(ii)]
-    count = count + 1
+    outputp(ii,:) = [n(ii),rho(ii)];
+    count = count + 1;
     toc()
 end
 

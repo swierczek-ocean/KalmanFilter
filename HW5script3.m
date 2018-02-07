@@ -10,8 +10,6 @@ sig = sqrt(sigsq);
 rho = zeros(sz,1);
 rhoTemp = zeros(nexp,1);
 
-funp = @(x)(exp(-x^2/2)/sqrt(2*pi));
-funq = @(x)(exp(-(x^2)/(2*sigsq))/sqrt(2*pi*sigsq));
 
 for ii=1:sz
     for jj=1:nexp
