@@ -3,9 +3,9 @@ tic()
 %% preliminaries
 Ne = 100000;            % number of samples
 y = 2.5;                % observation from actual people
-std = 0.015;            % guess for Gaussian proposal standard deviation, 0.015 is *good*
+stdv = 0.015;           % guess for Gaussian proposal standard deviation, 0.015 is *good*
 mu = 1.357208808;       % guess for Gaussian proposal mean
-nexp = 30;               % number of experiments
+nexp = 30;              % number of experiments
 rhoTemp = zeros(nexp,1);        % vector of rhos for each experiment
 W = zeros(Ne,1);                % initialize empty weight vector
 %%
@@ -28,11 +28,11 @@ P = P./C;
 %%
 
 for ll=1:nexp
-    X = std.*randn(Ne,1) + mu;      % Ne draws from our proposal distribution
+    X = stdv.*randn(Ne,1) + mu;      % Ne draws from our proposal distribution
     for ii=1:Ne                         
         
-        lump = -0.5*((X(ii)-1)^2 + ((y-X(ii)^3)/0.1) -((X(ii)-mu)^2/(2*std^2)));
-        W(ii) = sqrt(2*pi)*std*exp(lump)/C;  % calculate weights
+        lump = -0.5*((X(ii)-1)^2 + ((y-X(ii)^3)/0.1) -((X(ii)-mu)^2/(2*stdv^2)));
+        W(ii) = sqrt(2*pi)*stdv*exp(lump)/C;  % calculate weights
     end
     rhonum = sum(W.^2)/Ne;              % numerator for rho calculation
     rhoden = (sum(W)/Ne)^2;             % denominator for rho calculation
