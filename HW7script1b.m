@@ -6,10 +6,13 @@ y = 2.5;                % observation from actual people
 W = zeros(Ne,1);        % initialize empty weight vector
 funF = @(x)(0.5*((x-1)^2 + ((y-x^3)/0.1)^2));           % F(x)
 funp = @(x)exp(-0.5.*((x-1).^2 + ((y-x.^3)./0.1).^2));  % p(x)
+nu = 1:99;              % degrees of freedom for t distribution
+nexp = size(nu,2);
+rhoTemp = zeros(nexp,1);
 %%
 
 %% optimization
-[mu,phi] = fminsearch(funF,1.3);         % minimization
+mu = fminsearch(funF,1.3);         % minimization
 dx = 0.001;                              % evaluate Hessian using finite difference grid
 sigsq = (funF(mu-3*dx)/90-3*funF(mu-2*dx)/20+1.5*funF(mu-dx)-49*funF(mu)/18 ...
     +1.5*funF(mu+dx)-3*funF(mu+2*dx)/20+funF(mu+3*dx)/90)/(dx^2);
@@ -33,14 +36,17 @@ P = P./C;
 %%
 
 %% calculating weights and effective sample size
-X = stdv.*randn(Ne,1) + mu;         % Ne draws from our proposal distribution
-for ii=1:Ne
-    lump = -0.5*((X(ii)-1)^2 + ((y-X(ii)^3)/0.1)^2 -((X(ii)-mu)^2/(2*stdv^2)));
-    W(ii) = exp(lump);              % calculate weights
+for ll=1:nexp
+    X = stdv.*trnd(nu(ll),Ne,1) + mu;   % Ne draws from our proposal distribution
+    
+    W = funp(X)./tpdf(X,nu(ll));        % weights
+    
+    rhonum = sum(W.^2)/Ne;              % numerator for rho calculation
+    rhoden = (sum(W)/Ne)^2;             % denominator for rho calculation
+    rhoTemp(ll) = rhonum/rhoden
 end
-rhonum = sum(W.^2)/Ne;              % numerator for rho calculation
-rhoden = (sum(W)/Ne)^2;             % denominator for rho calculation
-rho = rhonum/rhoden;                % rho
+
+rho = mean(rhoTemp);                
 Neff = floor(Ne/rho)                % effective sample size
 %%
 
