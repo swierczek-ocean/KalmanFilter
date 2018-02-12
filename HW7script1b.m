@@ -13,7 +13,7 @@ rhoTemp = zeros(nexp,1);
 
 %% optimization
 mu = fminsearch(funF,1.3);         % minimization
-dx = 0.001;                              % evaluate Hessian using finite difference grid
+dx = 0.001;                        % evaluate Hessian using finite difference grid
 sigsq = (funF(mu-3*dx)/90-3*funF(mu-2*dx)/20+1.5*funF(mu-dx)-49*funF(mu)/18 ...
     +1.5*funF(mu+dx)-3*funF(mu+2*dx)/20+funF(mu+3*dx)/90)/(dx^2);
 stdv = sqrt(1/sigsq);
@@ -22,7 +22,7 @@ stdv = sqrt(1/sigsq);
 %% for histograms
 colors                  % my own color palette for plotting
 n = 80;                 % number of bins
-nbins = 4500;           % vertical scale
+nbins = ceil(Ne/20);    % vertical scale
 lb = 1.2;               % x axis lower bound
 ub = 1.5;               % x axis upper bound
 %%
@@ -47,7 +47,7 @@ for ll=1:nexp
 end
 
 rho = mean(rhoTemp);                
-Neff = floor(Ne/rho)                % effective sample size
+Neff = floor(Ne/rhoTemp(nexp))          % effective sample size
 %%
 
 %% resampling

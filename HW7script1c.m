@@ -1,10 +1,10 @@
 tic()
 
 %% preliminaries
-Ne = 100000;            % number of samples
-y = 2.5;                % observation from actual people
-W = zeros(Ne,1);        % initialize empty weight vector
-X = zeros(Ne,1);        % initialize empty sample vector
+Ne = 1000;            % number of samples
+y = 2.5;              % observation from actual people
+W = zeros(Ne,1);      % initialize empty weight vector
+X = zeros(Ne,1);      % initialize empty sample vector
 funF = @(x)(0.5*((x-1)^2 + ((y-x^3)/0.1)^2));           % F(x)
 funp = @(x)exp(-0.5.*((x-1).^2 + ((y-x.^3)./0.1).^2));  % p(x)
 %%
@@ -19,8 +19,8 @@ L = sqrt(1/sigsq);
 
 %% for histograms
 colors                  % my own color palette for plotting
-n = 80;                 % number of bins
-nbins = 4500;           % vertical scale
+n = 50;                 % number of bins
+nbins = ceil(Ne/20);    % vertical scale
 lb = 1.2;               % x axis lower bound
 ub = 1.5;               % x axis upper bound
 %%
@@ -35,7 +35,7 @@ P = P./C;
 
 %% calculating weights and effective sample size
 syms lambda
-parfor ii=1:Ne
+for ii=1:Ne
     xi = randn;
     eqn = funF(mu + lambda*L*xi) - phi == 0.5*xi^2;
     sollambda = vpasolve(eqn,lambda);

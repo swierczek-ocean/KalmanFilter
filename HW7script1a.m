@@ -17,11 +17,11 @@ stdv = sqrt(1/sigsq);
 %%
 
 %% for histograms
-colors                  % my own color palette for plotting
-n = 80;                 % number of bins
-nbins = 4500;           % vertical scale
-lb = 1.2;               % x axis lower bound
-ub = 1.5;               % x axis upper bound
+colors                      % my own color palette for plotting
+n = 80;                     % number of bins
+nbins = ceil(Ne/21);        % vertical scale
+lb = 1.2;                   % x axis lower bound
+ub = 1.5;                   % x axis upper bound
 %%
 
 %% for plotting p(x)
@@ -40,7 +40,7 @@ for ii=1:Ne
 end
 rhonum = sum(W.^2)/Ne;              % numerator for rho calculation
 rhoden = (sum(W)/Ne)^2;             % denominator for rho calculation
-rho = rhonum/rhoden;                % rho
+rho = rhonum/rhoden                 % rho
 Neff = floor(Ne/rho)                % effective sample size
 %%
 
