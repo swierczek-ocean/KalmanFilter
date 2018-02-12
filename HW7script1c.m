@@ -4,6 +4,7 @@ tic()
 Ne = 100000;            % number of samples
 y = 2.5;                % observation from actual people
 W = zeros(Ne,1);        % initialize empty weight vector
+X = zeros(Ne,1);        % initialize empty sample vector
 funF = @(x)(0.5*((x-1)^2 + ((y-x^3)/0.1)^2));           % F(x)
 funp = @(x)exp(-0.5.*((x-1).^2 + ((y-x.^3)./0.1).^2));  % p(x)
 %%
@@ -13,7 +14,7 @@ funp = @(x)exp(-0.5.*((x-1).^2 + ((y-x.^3)./0.1).^2));  % p(x)
 dx = 0.001;                              % evaluate Hessian using finite difference grid
 sigsq = (funF(mu-3*dx)/90-3*funF(mu-2*dx)/20+1.5*funF(mu-dx)-49*funF(mu)/18 ...
     +1.5*funF(mu+dx)-3*funF(mu+2*dx)/20+funF(mu+3*dx)/90)/(dx^2);
-stdv = sqrt(1/sigsq);
+L = sqrt(1/sigsq);
 %%
 
 %% for histograms
@@ -33,14 +34,20 @@ P = P./C;
 %%
 
 %% calculating weights and effective sample size
-X = stdv.*randn(Ne,1) + mu;         % Ne draws from our proposal distribution
-for ii=1:Ne
-    lump = -0.5*((X(ii)-1)^2 + ((y-X(ii)^3)/0.1)^2 -((X(ii)-mu)^2/(2*stdv^2)));
-    W(ii) = exp(lump);              % calculate weights
+syms lambda
+parfor ii=1:Ne
+    xi = randn;
+    eqn = funF(mu + lambda*L*xi) - phi == 0.5*xi^2;
+    sollambda = vpasolve(eqn,lambda);
+    eqnhat = funF(mu + lambda*L*xi) - phi == 0.5*(xi^2 + dx);
+    sollambdahat = vpasolve(eqnhat,lambda);
+    dldr = (sollambdahat(1) - sollambda(1))/dx;
+    X(ii) = mu + sollambda(1)*L*xi;                % calculate sample
+    W(ii) = sollambda(1)+2*xi^2*dldr;              % calculate weights
 end
 rhonum = sum(W.^2)/Ne;              % numerator for rho calculation
 rhoden = (sum(W)/Ne)^2;             % denominator for rho calculation
-rho = rhonum/rhoden;                % rho
+rho = rhonum/rhoden                 % rho
 Neff = floor(Ne/rho)                % effective sample size
 %%
 
@@ -69,6 +76,7 @@ axis([lb ub 0 25])
 title('target distribution')
 xlabel('x')
 ylabel('p(x)')
+print('target','-djpeg')
 
 figure()
 hist(X,n)
@@ -78,6 +86,7 @@ axis([lb ub 0 nbins])
 title('proposal distribution')
 xlabel('x')
 ylabel('count')
+print('proposal','-djpeg')
 
 figure()
 hist(x,n)
@@ -87,6 +96,7 @@ axis([lb ub 0 nbins])
 title('resampled ensemble')
 xlabel('x')
 ylabel('count')
+print('resampled','-djpeg')
 %%
 
 toc()
