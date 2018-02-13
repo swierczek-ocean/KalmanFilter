@@ -1,7 +1,7 @@
 tic()
 
 %% preliminaries
-Ne = 100;               % number of samples
+Ne = 1000;               % number of samples
 W = zeros(Ne,1);        % initialize empty weight vector
 X = zeros(2,Ne);        % initialize empty sample vector
 pn = 2;                 % type of norm
@@ -50,7 +50,7 @@ for ii=1:Ne
     eqnhat = funF(mu + lambda*L*xi) - phi == 0.5*(xi'*xi + dx);
     sollambdahat = vpasolve(eqnhat,lambda);
     dldr = (sollambdahat(1) - sollambda(1))/dx;
-    X(:,ii) = mu + sollambda(1).*L*xi;                  % calculate sample
+    X(:,ii) = mu + sollambda(1).*L*xi;                 % calculate sample
     W(ii) = sollambda(1)+2*(xi'*xi)*dldr               % calculate weights
 end
 rhonum = sum(W.^2)/Ne;              % numerator for rho calculation

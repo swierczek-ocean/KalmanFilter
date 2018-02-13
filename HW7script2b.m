@@ -69,6 +69,7 @@ end
 %% plots
 figure()
 surf(Z,Z,Ps)
+colormap autumn
 axis([lb ub lb ub 0 0.06])
 title('target distribution')
 xlabel('x')
