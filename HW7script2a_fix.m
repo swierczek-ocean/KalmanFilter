@@ -4,25 +4,23 @@ tic()
 Ne = 100000;            % number of samples
 W = zeros(Ne,1);        % initialize empty weight vector
 pn = 2;                 % type of norm
-funF = @(x)((norm(x-5,2)^4)/100 + 0.2*sin(5*norm(x,2)));        % F(x)
+funF = @(x)((norm(x-5,2)^4)/100 + 0.2*sin(5*norm(x,2)));                        % F(x)
 funp = @(x,y)exp(-(((x-5).^2+(y-5).^2).^2)./100 + 0.2*sin(5*sqrt(x.^2+y.^2)));  % p(x)
 %%
 
 %% optimization
-mu = lsqnonlin(funF,[5,5]);           % minimization
+mu = lsqnonlin(funF,[5,5]);     % minimization
 mu = mu'
 phi = funF(mu);
-H = hessian(funF,mu);
-H = 0.5.*(H+H');
+H = 4.27*eye(2);                % guess for covariance matrix of gaussian proposal
 sig = eye(2)/H;
-%L = chol(H,'lower');
 L = real(sqrtm(H));
 %%
 
 %% for histograms
 colors                  % my own color palette for plotting
-n = [10,10];            % number of bins
-nbins = 1000;           % vertical scale
+n = [50,50];            % number of bins
+nbins = 300;            % vertical scale
 lb = 0;                 % x axis lower bound
 ub = 10;                % x axis upper bound
 %%
@@ -32,10 +30,10 @@ Z = linspace(lb,ub,200);
 P = zeros(200,200);
 for jj=1:200
     for kk=1:200
-        P(jj,kk)=funp(Z(jj),Z(kk));
+        P(jj,kk)=funp(Z(jj),Z(kk));         % plotting p(x) on a grid
     end
 end
-C = integral2(funp,-Inf,Inf,-Inf,Inf);       % scaling constant
+C = integral2(funp,-Inf,Inf,-Inf,Inf);      % scaling constant
 P = P./C;
 %%
 
@@ -80,9 +78,7 @@ zlabel('p(x,y)')
 
 figure()
 hist3(X',n)
-% h = findobj(gca,'Type','patch');
-% h.FaceColor = Color(:,7);
-axis([lb ub lb ub 0 25])
+axis([lb ub lb ub 0 2*nbins])
 title('proposal distribution')
 xlabel('x')
 ylabel('y')
@@ -90,13 +86,14 @@ zlabel('count')
 
 figure()
 hist3(x',n)
-% h = findobj(gca,'Type','patch');
-% h.FaceColor = Color(:,9);
 axis([lb ub lb ub 0 nbins])
 title('resampled ensemble')
 xlabel('x')
 ylabel('y')
 zlabel('count')
+
+figure()
+TrianglePlot(x,1)
 %%
 
 toc()

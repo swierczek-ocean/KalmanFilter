@@ -9,7 +9,7 @@ funp = @(x,y)exp(-(((x-5).^2+(y-5).^2).^2)./100 + 0.2*sin(5*sqrt(x.^2+y.^2)));  
 %%
 
 %% optimization
-mu = lsqnonlin(funF,[0,0]);           % minimization
+mu = lsqnonlin(funF,[5,5]);           % minimization
 mu = mu'
 phi = funF(mu);
 H = hessian(funF,mu);
@@ -21,10 +21,10 @@ L = real(sqrtm(H));
 
 %% for histograms
 colors                  % my own color palette for plotting
-n = [10,10];            % number of bins
-nbins = 1000;           % vertical scale
+n = [50,50];            % number of bins
+nbins = 9000;           % vertical scale
 lb = 0;                 % x axis lower bound
-ub = 10;               % x axis upper bound
+ub = 10;                % x axis upper bound
 %%
 
 %% for plotting p(x)
@@ -32,11 +32,11 @@ Z = linspace(lb,ub,200);
 P = zeros(200,200);
 for jj=1:200
     for kk=1:200
-        P(jj,kk)=funp(Z(kk),Z(jj));
+        P(jj,kk)=funp(Z(jj),Z(kk));
     end
 end
 C = integral2(funp,-Inf,Inf,-Inf,Inf);       % scaling constant
-%P = P./C;
+P = P./C;
 %%
 
 %% calculating weights and effective sample size
@@ -72,7 +72,7 @@ end
 %% plots
 figure()
 surf(Z,Z,P)
-axis([lb ub lb ub 0 2])
+axis([lb ub lb ub 0 0.06])
 title('target distribution')
 xlabel('x')
 ylabel('y')
@@ -80,9 +80,7 @@ zlabel('p(x,y)')
 
 figure()
 hist3(X',n)
-% h = findobj(gca,'Type','patch');
-% h.FaceColor = Color(:,7);
-axis([lb ub lb ub 0 25])
+axis([lb ub lb ub 0 nbins])
 title('proposal distribution')
 xlabel('x')
 ylabel('y')
@@ -90,8 +88,6 @@ zlabel('count')
 
 figure()
 hist3(x',n)
-% h = findobj(gca,'Type','patch');
-% h.FaceColor = Color(:,9);
 axis([lb ub lb ub 0 nbins])
 title('resampled ensemble')
 xlabel('x')

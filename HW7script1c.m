@@ -1,7 +1,7 @@
 tic()
 
 %% preliminaries
-Ne = 1000;            % number of samples
+Ne = 100;            % number of samples
 y = 2.5;              % observation from actual people
 W = zeros(Ne,1);      % initialize empty weight vector
 X = zeros(Ne,1);      % initialize empty sample vector
@@ -37,13 +37,13 @@ P = P./C;
 syms lambda
 for ii=1:Ne
     xi = randn;
-    eqn = funF(mu + lambda*L*xi) - phi == 0.5*xi^2;
+    eqn = funF(mu + lambda*L*xi) - phi == 0.5*(xi'*xi);
     sollambda = vpasolve(eqn,lambda);
-    eqnhat = funF(mu + lambda*L*xi) - phi == 0.5*(xi^2 + dx);
+    eqnhat = funF(mu + lambda*L*xi) - phi == 0.5*(xi'*xi + dx);
     sollambdahat = vpasolve(eqnhat,lambda);
     dldr = (sollambdahat(1) - sollambda(1))/dx;
-    X(ii) = mu + sollambda(1)*L*xi;                % calculate sample
-    W(ii) = sollambda(1)+2*xi^2*dldr;              % calculate weights
+    X(ii) = mu + sollambda(1)*L*xi;                    % calculate sample
+    W(ii) = sollambda(1)+2*(xi'*xi)*dldr;              % calculate weights
 end
 rhonum = sum(W.^2)/Ne;              % numerator for rho calculation
 rhoden = (sum(W)/Ne)^2;             % denominator for rho calculation
