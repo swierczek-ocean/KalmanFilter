@@ -70,6 +70,7 @@ end
 %% plots
 figure()
 surf(Z,Z,P)
+colormap autumn
 axis([lb ub lb ub 0 0.06])
 title('target distribution')
 xlabel('x')
@@ -91,6 +92,9 @@ title('resampled ensemble')
 xlabel('x')
 ylabel('y')
 zlabel('count')
+
+figure()
+TrianglePlot(X,1)
 
 figure()
 TrianglePlot(x,1)

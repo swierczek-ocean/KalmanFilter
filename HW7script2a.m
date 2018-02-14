@@ -94,6 +94,12 @@ title('resampled ensemble')
 xlabel('x')
 ylabel('y')
 zlabel('count')
+
+figure()
+TrianglePlot(X,1)
+
+figure()
+TrianglePlot(x,1)
 %%
 
 toc()

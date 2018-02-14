@@ -43,7 +43,9 @@ P = P./C;
 
 %% calculating weights and effective sample size
 syms lambda
+count = 0;
 for ii=1:Ne
+    count = count + 1
     xi = randn(2,1);
     eqn = funF(mu + lambda*L*xi) - phi == 0.5*(xi'*xi);
     sollambda = vpasolve(eqn,lambda);
