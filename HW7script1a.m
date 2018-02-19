@@ -1,4 +1,6 @@
-tic()
+
+clear all
+clc
 
 %% preliminaries
 Ne = 100000;            % number of samples
@@ -47,19 +49,20 @@ Neff = floor(Ne/rho)                % effective sample size
 %% resampling
 x = X;                              % little x will be resampled ensemble
 What = W./(sum(W));                 % W hat are the self normalized weights
-Whatsum = zeros(Ne,1);                  
+           
+Whatsum = cumsum(What);  % Whatsum is a cumulative sum of W hat
 
-for ii=1:Ne
-    Whatsum(ii) = sum(What(1:ii));  % Whatsum is a cumulative sum of W hat
-end
-
-U = unifrnd(0,1,Ne,1);
-U = sort(U);
-
+tic()
+kk = 1;
+u1 = rand/Ne;
 for jj=1:Ne                         % performs resampling algorithm
-    kk=find(Whatsum>=U(jj),1);           
+    u = u1+(jj-1)/Ne;
+    while u>Whatsum(kk)
+        kk=kk+1;
+    end         
     x(jj) = X(kk);    
 end
+toc()
 %%
 
 %% plots
@@ -87,6 +90,12 @@ axis([lb ub 0 nbins])
 title('resampled ensemble')
 xlabel('x')
 ylabel('count')
-%%
 
-toc()
+figure()
+histogram(x,'Normalization','pdf')
+hold on
+histogram(X,'Normalization','pdf')
+plot(Z,P,'Color',Color(:,28),'Linewidth',2)
+axis([lb ub 0 30])
+hold off
+%%
