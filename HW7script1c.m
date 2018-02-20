@@ -1,7 +1,7 @@
 tic()
 
 %% preliminaries
-Ne = 100;            % number of samples
+Ne = 1e4;             % number of samples
 y = 2.5;              % observation from actual people
 W = zeros(Ne,1);      % initialize empty weight vector
 X = zeros(Ne,1);      % initialize empty sample vector
@@ -37,66 +37,34 @@ P = P./C;
 syms lambda
 for ii=1:Ne
     xi = randn;
-    eqn = funF(mu + lambda*L*xi) - phi == 0.5*(xi'*xi);
-    sollambda = vpasolve(eqn,lambda);
-    eqnhat = funF(mu + lambda*L*xi) - phi == 0.5*(xi'*xi + dx);
-    sollambdahat = vpasolve(eqnhat,lambda);
-    dldr = (sollambdahat(1) - sollambda(1))/dx;
-    X(ii) = mu + sollambda(1)*L*xi;                    % calculate sample
-    W(ii) = sollambda(1)+2*(xi'*xi)*dldr;              % calculate weights
+    [l,z,w]=MyRandomMap(y,mu,L,phi,xi);
+    X(ii) = z;                    % calculate sample
+    W(ii) = -log(w);              % calculate weights
 end
-rhonum = sum(W.^2)/Ne;              % numerator for rho calculation
-rhoden = (sum(W)/Ne)^2;             % denominator for rho calculation
-rho = rhonum/rhoden                 % rho
-Neff = floor(Ne/rho)                % effective sample size
-%%
+What = normalizeweights(W);
+
+rhonum = mean(What.^2);              % numerator for rho calculation
+rhoden = (mean(What))^2;             % denominator for rho calculation
+rho = real(rhonum/rhoden)            % rho
+Neff = floor(Ne/rho)                 % effective sample size
+%%                
 
 %% resampling
-x = X;                              % little x will be resampled ensemble
-What = W./(sum(W));                 % W hat are the self normalized weights
-Whatsum = zeros(Ne,1);                  
-
-for ii=1:Ne
-    Whatsum(ii) = sum(What(1:ii));  % Whatsum is a cumulative sum of W hat
-end
-
-U = unifrnd(0,1,Ne,1);
-U = sort(U);
-
-for jj=1:Ne                         % performs resampling algorithm
-    kk=find(Whatsum>=U(jj),1);           
-    x(jj) = X(kk);    
-end
+x = resampling(What,X',Ne,1);
 %%
 
-%% plots
+%% plot
 figure()
-plot(Z,P,'Color',Color(:,19),'Linewidth',2)
-axis([lb ub 0 25])
-title('target distribution')
+h1 = histogram(x,'Normalization','pdf');
+hold on
+h2 = histogram(X,'Normalization','pdf');
+h3 = plot(Z,P,'Color',Color(:,28),'Linewidth',2);
+axis([lb ub 0 30])
+title('random map proposal')
 xlabel('x')
-ylabel('p(x)')
-print('target','-djpeg')
-
-figure()
-hist(X,n)
-h = findobj(gca,'Type','patch');
-h.FaceColor = Color(:,7);
-axis([lb ub 0 nbins])
-title('proposal distribution')
-xlabel('x')
-ylabel('count')
-print('proposal','-djpeg')
-
-figure()
-hist(x,n)
-h = findobj(gca,'Type','patch');
-h.FaceColor = Color(:,9);
-axis([lb ub 0 nbins])
-title('resampled ensemble')
-xlabel('x')
-ylabel('count')
-print('resampled','-djpeg')
+ylabel('y')
+legend([h1(1),h2(1),h3(1)],'resampled ensemble','proposal ensemble','target distribution')
+hold off
 %%
 
 toc()
