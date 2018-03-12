@@ -15,9 +15,19 @@ nsteps = 20000;
 Traj = zeros(3,nsteps);
 PF = zeros(3,nsteps);
 Ne = 40;
+w = zeros(1,Ne);
 M1 = [0,0,0;-1,0,0;1,0,0];
 M2 = [0,0,0;0,0,1;0,1,0];
 M3 = [-sigma,sigma,0;rho,-1,0;0,0,-beta];
+color1 = 11;
+color2 = 9;
+color3 = 22;
+color4 = 8;
+color5 = 9;
+coords1 = [-10 60 -25 25 -30 30];
+coords2 = [-25 25 -10 60];
+name = 'SPF1';
+ll = 25;
 %%
 
 %% simulation and plots
@@ -25,21 +35,6 @@ M3 = [-sigma,sigma,0;rho,-1,0;0,0,-beta];
 for ii=2:nsteps
     Traj(:,ii) = lorenz63s4(Traj(:,ii-1),dt,M1,M2,M3)+sqrt(dt)*sqrt(Q).*randn(3,1);
 end
-
-figure
-plot3(Traj(3,:),Traj(1,:),Traj(2,:),'Color',Color(:,9),'Linewidth',1.5)
-axis([-10 60 -25 25 -30 30])
-xlabel('z')
-ylabel('x')
-zlabel('y')
-print('3D_trajectory','-djpeg')
-
-figure
-plot(Traj(1,:),Traj(3,:),'Color',Color(:,11),'Linewidth',1.5)
-axis([-25 25 -10 60])
-xlabel('x')
-ylabel('z')
-print('2D_trajectory','-djpeg')
 %%
 
 %% observations
@@ -59,42 +54,16 @@ for jj=2:nsteps
     Ens = resamplingmmo(W,Ens,Ne,3);
     PF(:,jj) = mean(Ens,2);
 end
-
 %%
 
-%% plot
-figure
-plot3(Traj(3,:),Traj(1,:),Traj(2,:),'Color',Color(:,11),'Linewidth',1.3)
-hold on
-plot3(PF(3,:),PF(1,:),PF(2,:),'*','Color',Color(:,9),'MarkerSize',2)
-axis([-10 60 -25 25 -30 30])
-xlabel('z')
-ylabel('x')
-zlabel('y')
-print('3D_trajectory_plus_SPF','-djpeg')
-hold off
-
-figure
-plot(Traj(1,:),Traj(3,:),'Color',Color(:,11),'Linewidth',1.3)
-hold on
-plot(PF(1,:),PF(3,:),'*','Color',Color(:,9),'MarkerSize',2)
-axis([-25 25 -10 60])
-xlabel('x')
-ylabel('z')
-print('2D_trajectory_plus_SPF','-djpeg')
-hold off
+%% Error and plot
 
 Error = Traj - PF;
 Error = sqrt(sum(Error.^2))./sqrt(3);
 st = floor(0.25*nsteps);
 average_RMSE = mean(Error(st:end))
 
-figure
-plot(Error,'*','Color',Color(:,22),'MarkerSize',3)
-xlabel('time step')
-ylabel('error')
-print('SPF_error_2','-djpeg')
-
+lorenz63plots2(Traj,PF,color1,color2,color3,color4,color5,coords1,coords2,name,ll,nsteps)
 %%
 
 toc()
