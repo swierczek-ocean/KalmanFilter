@@ -1,7 +1,7 @@
 tic()
 clc
 close all
-clear all
+clear
 
 %% preliminaries
 colors
@@ -15,12 +15,16 @@ nsteps = 20000;
 Traj = zeros(3,nsteps);
 PF = zeros(3,nsteps);
 Ne = 20;
+M1 = [0,0,0;-1,0,0;1,0,0];
+M2 = [0,0,0;0,0,1;0,1,0];
+M3 = [-sigma,sigma,0;rho,-1,0;0,0,-beta];
+ll = 27;
 %%
 
 %% simulation and plots
 
 for ii=2:nsteps
-    Traj(:,ii) = lorenz63s(Traj(:,ii-1),dt,sigma,beta,rho,Q);
+    Traj(:,ii) = lorenz63s4(Traj(:,ii-1),dt,M1,M2,M3)+sqrt(dt)*sqrt(Q).*randn(3,1);
 end
 
 figure
@@ -46,7 +50,6 @@ Obs = H*Traj +R.*randn(2,nsteps);
 
 %% ensemble + simulation + movie
 Ens = randn(3,Ne);
-W = ones(Ne);
 
 figure, set(gcf, 'Color','white')
 plot3(Traj(3,1),Traj(1,1),Traj(2,1),'Color',Color(:,11),'Linewidth',1.3)
@@ -63,16 +66,37 @@ vidObj.FrameRate = 30;
 open(vidObj);
 writeVideo(vidObj, getframe(gca));
 
-for jj=2:nsteps
-    Ens = lorenz63s(Ens,dt,sigma,beta,rho,Q);
-    w = diag(0.5.*(Obs(:,jj)-H*Ens)'*(eye(2)./R)*(Obs(:,jj)-H*Ens));
+for jj=2:(ll+1)
+    Ens = lorenz63s4(Ens,dt,M1,M2,M3) + sqrt(dt)*sqrt(Q).*randn(3,Ne);
+    for kk=1:Ne
+        w(kk) = 0.5.*(Obs(:,jj)-H*Ens(:,kk))'*(eye(2)./R)*(Obs(:,jj)-H*Ens(:,kk));
+    end
     W = normalizeweights(w);
     Ens = resamplingmmo(W,Ens,Ne,3);
     PF(:,jj) = mean(Ens,2);
     if(mod(jj,10)==0)
-        plot3(Traj(3,jj-9:jj),Traj(1,jj-9:jj),Traj(2,jj-9:jj),'Color',Color(:,11),'Linewidth',1.6)
+        plot3(Traj(3,1:jj),Traj(1,1:jj),Traj(2,1:jj),'Color',Color(:,11),'Linewidth',1.6)
         hold on
-        plot3(PF(3,jj-9:jj),PF(1,jj-9:jj),PF(2,jj-9:jj),'*','Color',Color(:,9),'MarkerSize',3)
+        plot3(PF(3,1:jj),PF(1,1:jj),PF(2,1:jj),'*','Color',Color(:,9),'MarkerSize',3)
+        axis([-10 60 -25 25 -30 30])
+        hold off
+        drawnow()
+        writeVideo(vidObj, getframe(gca));
+    end
+end
+
+for jj=(ll+2):nsteps
+    Ens = lorenz63s4(Ens,dt,M1,M2,M3) + sqrt(dt)*sqrt(Q).*randn(3,Ne);
+    for kk=1:Ne
+        w(kk) = 0.5.*(Obs(:,jj)-H*Ens(:,kk))'*(eye(2)./R)*(Obs(:,jj)-H*Ens(:,kk));
+    end
+    W = normalizeweights(w);
+    Ens = resamplingmmo(W,Ens,Ne,3);
+    PF(:,jj) = mean(Ens,2);
+    if(mod(jj,10)==0)
+        plot3(Traj(3,jj-ll:jj),Traj(1,jj-ll:jj),Traj(2,jj-ll:jj),'Color',Color(:,11),'Linewidth',1.6)
+        hold on
+        plot3(PF(3,jj-ll:jj),PF(1,jj-ll:jj),PF(2,jj-ll:jj),'*','Color',Color(:,9),'MarkerSize',3)
         axis([-10 60 -25 25 -30 30])
         hold off
         drawnow()
@@ -98,7 +122,6 @@ print('SPF_error_1','-djpeg')
 
 %% ensemble + simulation + movie
 Ens = randn(3,Ne);
-W = ones(Ne);
 
 figure, set(gcf, 'Color','white')
 plot(Traj(1,1),Traj(3,1),'Color',Color(:,11),'Linewidth',1.3)
@@ -115,16 +138,37 @@ vidObj.FrameRate = 30;
 open(vidObj);
 writeVideo(vidObj, getframe(gca));
 
-for jj=2:nsteps
-    Ens = lorenz63s(Ens,dt,sigma,beta,rho,Q);
-    w = diag(0.5.*(Obs(:,jj)-H*Ens)'*(eye(2)./R)*(Obs(:,jj)-H*Ens));
+for jj=2:(ll+1)
+    Ens = lorenz63s4(Ens,dt,M1,M2,M3) + sqrt(dt)*sqrt(Q).*randn(3,Ne);
+    for kk=1:Ne
+        w(kk) = 0.5.*(Obs(:,jj)-H*Ens(:,kk))'*(eye(2)./R)*(Obs(:,jj)-H*Ens(:,kk));
+    end
     W = normalizeweights(w);
     Ens = resamplingmmo(W,Ens,Ne,3);
     PF(:,jj) = mean(Ens,2);
     if(mod(jj,10)==0)
-        plot(Traj(1,jj-9:jj),Traj(3,jj-9:jj),'Color',Color(:,11),'Linewidth',1.6)
+        plot(Traj(1,1:jj),Traj(3,1:jj),'Color',Color(:,11),'Linewidth',1.6)
         hold on
-        plot(PF(1,jj-9:jj),PF(3,jj-9:jj),'*','Color',Color(:,9),'MarkerSize',3)
+        plot(PF(1,1:jj),PF(3,1:jj),'*','Color',Color(:,9),'MarkerSize',3)
+        axis([-25 25 -10 60])
+        hold off
+        drawnow()
+        writeVideo(vidObj, getframe(gca));
+    end
+end
+
+for jj=(ll+2):nsteps
+    Ens = lorenz63s4(Ens,dt,M1,M2,M3) + sqrt(dt)*sqrt(Q).*randn(3,Ne);
+    for kk=1:Ne
+        w(kk) = 0.5.*(Obs(:,jj)-H*Ens(:,kk))'*(eye(2)./R)*(Obs(:,jj)-H*Ens(:,kk));
+    end
+    W = normalizeweights(w);
+    Ens = resamplingmmo(W,Ens,Ne,3);
+    PF(:,jj) = mean(Ens,2);
+    if(mod(jj,10)==0)
+        plot(Traj(1,jj-ll:jj),Traj(3,jj-ll:jj),'Color',Color(:,11),'Linewidth',1.6)
+        hold on
+        plot(PF(1,jj-ll:jj),PF(3,jj-ll:jj),'*','Color',Color(:,9),'MarkerSize',3)
         axis([-25 25 -10 60])
         hold off
         drawnow()

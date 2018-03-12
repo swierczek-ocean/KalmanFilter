@@ -77,18 +77,6 @@ end
 
 close(vidObj);
 
-% figure
-% plot3(Traj(3,:),Traj(1,:),Traj(2,:),'Color',Color(:,7),'Linewidth',1.5)
-% axis([-10 60 -25 25 -30 30])
-% xlabel('z')
-% ylabel('x')
-% zlabel('y')
-% 
-% figure
-% plot(Traj(1,:),Traj(3,:),'Color',Color(:,8),'Linewidth',1.5)
-% axis([-25 25 -10 60])
-% xlabel('x')
-% ylabel('z')
 %%
 
 

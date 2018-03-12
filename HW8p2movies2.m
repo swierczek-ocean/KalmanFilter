@@ -47,6 +47,13 @@ Obs = H*Traj +R.*randn(2,nsteps);
 
 %% ensemble + simulation + movie
 Ens = randn(3,Ne);
+szh = size(H,1);
+szq = size(H,2);
+QM = Q.*eye(szq);
+RM = R.*eye(szh);
+Z = eye(szh)/(H*QM*H'+R);
+K = QM*H'*Z;
+w = zeros(1,Ne);
 
 figure, set(gcf, 'Color','white')
 plot3(Traj(3,1),Traj(1,1),Traj(2,1),'Color',Color(:,11),'Linewidth',1.3)
@@ -57,24 +64,24 @@ hold off
 set(gca, 'nextplot','replacechildren', 'Visible','off');
 
 nFrames = 471;
-vidObj = VideoWriter('lorenz63_3d_plus_SPF_whole.avi');
+vidObj = VideoWriter('lorenz63_3d_plus_OPF_whole.avi');
 vidObj.Quality = 100;
 vidObj.FrameRate = 30;
 open(vidObj);
 writeVideo(vidObj, getframe(gca));
 
 for jj=2:nsteps
-    Ens = lorenz63s4(Ens,dt,M1,M2,M3) + sqrt(dt)*sqrt(Q).*randn(3,Ne);
+    Ens = lorenz63s4(Ens,dt,M1,M2,M3)++ K*(Obs(:,jj) - H*Ens);
     for kk=1:Ne
-        w(kk) = 0.5.*(Obs(:,jj)-H*Ens(:,kk))'*(eye(2)./R)*(Obs(:,jj)-H*Ens(:,kk));
+        w(kk) = 0.5.*(Obs(:,jj)-H*Ens(:,kk))'*Z*(Obs(:,jj)-H*Ens(:,kk));
     end
     W = normalizeweights(w);
     Ens = resamplingmmo(W,Ens,Ne,3);
     PF(:,jj) = mean(Ens,2);
     if(mod(jj,10)==0)
-        plot3(Traj(3,1:jj),Traj(1,1:jj),Traj(2,1:jj),'Color',Color(:,11),'Linewidth',1.6)
+        plot3(Traj(3,1:jj),Traj(1,1:jj),Traj(2,1:jj),'Color',Color(:,11),'Linewidth',1.3)
         hold on
-        plot3(PF(3,1:jj),PF(1,1:jj),PF(2,1:jj),'*','Color',Color(:,9),'MarkerSize',3)
+        plot3(PF(3,1:jj),PF(1,1:jj),PF(2,1:jj),'*','Color',Color(:,9),'MarkerSize',2)
         axis([-10 60 -25 25 -30 30])
         hold off
         drawnow()
@@ -96,6 +103,7 @@ plot(Error,'*','Color',Color(:,22),'MarkerSize',3)
 xlabel('time step')
 ylabel('error')
 
+
 %% ensemble + simulation + movie
 Ens = randn(3,Ne);
 
@@ -108,24 +116,24 @@ hold off
 set(gca, 'nextplot','replacechildren', 'Visible','off');
 
 nFrames = 471;
-vidObj = VideoWriter('lorenz63_2d_plus_SPF_whole.avi');
+vidObj = VideoWriter('lorenz63_2d_plus_OPF_whole.avi');
 vidObj.Quality = 100;
 vidObj.FrameRate = 30;
 open(vidObj);
 writeVideo(vidObj, getframe(gca));
 
 for jj=2:nsteps
-    Ens = lorenz63s4(Ens,dt,M1,M2,M3) + sqrt(dt)*sqrt(Q).*randn(3,Ne);
+    Ens = lorenz63s4(Ens,dt,M1,M2,M3)++ K*(Obs(:,jj) - H*Ens);
     for kk=1:Ne
-        w(kk) = 0.5.*(Obs(:,jj)-H*Ens(:,kk))'*(eye(2)./R)*(Obs(:,jj)-H*Ens(:,kk));
+        w(kk) = 0.5.*(Obs(:,jj)-H*Ens(:,kk))'*Z*(Obs(:,jj)-H*Ens(:,kk));
     end
     W = normalizeweights(w);
     Ens = resamplingmmo(W,Ens,Ne,3);
     PF(:,jj) = mean(Ens,2);
     if(mod(jj,10)==0)
-        plot(Traj(1,1:jj),Traj(3,1:jj),'Color',Color(:,11),'Linewidth',1.6)
+        plot(Traj(1,1:jj),Traj(3,1:jj),'Color',Color(:,11),'Linewidth',1.3)
         hold on
-        plot(PF(1,1:jj),PF(3,1:jj),'*','Color',Color(:,9),'MarkerSize',3)
+        plot(PF(1,1:jj),PF(3,1:jj),'*','Color',Color(:,9),'MarkerSize',2)
         axis([-25 25 -10 60])
         hold off
         drawnow()
