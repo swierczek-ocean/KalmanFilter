@@ -30,10 +30,10 @@ name = 'SPF1';
 ll = 25;
 %%
 
-%% simulation and plots
+%% true state
 
 for ii=2:nsteps
-    Traj(:,ii) = lorenz63s4(Traj(:,ii-1),dt,M1,M2,M3)+sqrt(dt)*sqrt(Q).*randn(3,1);
+    Traj(:,ii) = lorenz63s4(Traj(:,ii-1),dt,M1,M2,M3)+sqrt(dt).*randn(3,1);
 end
 %%
 
@@ -42,11 +42,11 @@ H = [1,0,0;0,0,1];
 Obs = H*Traj +R.*randn(2,nsteps);
 %%
 
-%% ensemble + simulation + movie
+%% ensemble + simulation
 Ens = randn(3,Ne);
 
 for jj=2:nsteps
-    Ens = lorenz63s4(Ens,dt,M1,M2,M3) + sqrt(dt)*sqrt(Q).*randn(3,Ne);
+    Ens = lorenz63s4(Ens,dt,M1,M2,M3) + sqrt(dt).*randn(3,Ne);
     for kk=1:Ne
         w(kk) = 0.5.*(Obs(:,jj)-H*Ens(:,kk))'*(eye(2)./R)*(Obs(:,jj)-H*Ens(:,kk));
     end
@@ -63,7 +63,7 @@ Error = sqrt(sum(Error.^2))./sqrt(3);
 st = floor(0.25*nsteps);
 average_RMSE = mean(Error(st:end))
 
-lorenz63plots2(Traj,PF,color1,color2,color3,color4,color5,coords1,coords2,name,ll,nsteps)
+%lorenz63plots2(Traj,PF,color1,color2,color3,color4,color5,coords1,coords2,name,ll,nsteps)
 %%
 
 toc()

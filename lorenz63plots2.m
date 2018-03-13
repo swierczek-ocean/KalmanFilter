@@ -1,6 +1,20 @@
 function lorenz63plots2(Traj,PF,color1,color2,color3,color4,color5,coords1,coords2,name,ll,nsteps)
 colors
 
+%% Error plot
+
+Error = Traj - PF;
+Error = sqrt(sum(Error.^2))./sqrt(3);
+st = floor(0.25*nsteps);
+average_RMSE = mean(Error(st:end))
+
+figure
+plot(Error,'*','Color',Color(:,color3),'MarkerSize',3)
+xlabel('time step')
+ylabel('error')
+print([name,'_error_1'],'-djpeg')
+%%
+
 %% plots of trajectory in 2D and 3D
 
 figure
@@ -106,20 +120,6 @@ end
 
 close(vidObj);
 
-%%
-
-%% Error plot
-
-Error = Traj - PF;
-Error = sqrt(sum(Error.^2))./sqrt(3);
-st = floor(0.25*nsteps);
-average_RMSE = mean(Error(st:end))
-
-figure
-plot(Error,'*','Color',Color(:,color3),'MarkerSize',3)
-xlabel('time step')
-ylabel('error')
-print([name,'_error_1'],'-djpeg')
 %%
 
 %% plots of assimilation

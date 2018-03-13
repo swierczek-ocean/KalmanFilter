@@ -1,5 +1,5 @@
-function X = lorenz63s1(x,dt,M1,M2,M3)
-f = @(x)((M1*x).*(M2*x) + M3*x);
+function X = lorenz96s4(x,dt,M,N,F)
+f = @(x)(M*x.*(N*x)+(F-x));
 
 k1 = f(x);
 k2 = f(x+0.5*dt.*k1);
