@@ -14,7 +14,7 @@ R = 1;
 nsteps = 20000;
 Traj = zeros(3,nsteps);
 PF = zeros(3,nsteps);
-Ne = 20;
+Ne = 3000;
 w = zeros(1,Ne);
 M1 = [0,0,0;-1,0,0;1,0,0];
 M2 = [0,0,0;0,0,1;0,1,0];
@@ -59,7 +59,7 @@ A = real(sqrtm(A));
 
 
 for jj=2:nsteps
-    f = lorenz63s4(Ens,dt,M1,M2,M3) + sqrtQ*randn(3,Ne);
+    f = lorenz63s4(Ens,dt,M1,M2,M3);
     for kk=1:Ne
         w(kk) = 0.5.*((Obs(:,jj)-H*f(:,kk))'/Z)*(Obs(:,jj)-H*f(:,kk));
     end
@@ -90,7 +90,7 @@ Error = sqrt(sum(Error.^2))./sqrt(3);
 st = floor(0.25*nsteps);
 average_RMSE = mean(Error(st:end))
 
-lorenz63plots2(Traj,PF,color1,color2,color3,color4,color5,coords1,coords2,name,ll,nsteps)
+%lorenz63plots2(Traj,PF,color1,color2,color3,color4,color5,coords1,coords2,name,ll,nsteps)
 %%
 
 toc()
