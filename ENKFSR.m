@@ -1,34 +1,43 @@
-function [X,mu_a,P_a] = ENKFSR(X,dt,jump,n,ne,H,R,L1,L2,F,r,alpha,y)
-
-f = @(x)(L1*x.*(L2*x)+(F-x));
-L = localize2(n,r);
-m = size(y,1);
-Rm = R*eye(m);
+function [X,mu_a,spread] = ENKFSR(X,dt,jump,n,Ne,H,M,N,F,alpha,y,L,Rm,nobs)
 
 for i=1:jump
-    k1 = f(X);
-    k2 = f(X+0.5*dt.*k1);
-    k3 = f(X+2*dt.*k2 -dt.*k1);
-    X = X + dt.*((1/6).*k1+(2/3).*k2+(1/6).*k3);    % forecast ensemble
+    X = lorenz96s4(X,dt,M,N,F);    % forecast ensemble
 end
 
+P_f = (1+alpha)*L.*cov(X');
 mu_f = mean(X,2);                                   % forecast mean
-x_f = mu_f + sqrt(1+alpha).*(X-mu_f);               % ensemble inflation
-X_f = (x_f - mu_f).*(1/sqrt(ne-1));                 % forecast perturbations
-P_f = cov(X_f');                                    % forecast covariance
-P_f = L.*P_f;                                       % localization
-K = P_f*(H')/(H*P_f*H' + Rm);                       % Kalman Gain
-mu_a = mu_f + K*(y-H*mu_f);                         % analysis mean
+X_f = (X - mu_f);                                   % forecast perturbations
+X_t = mu_f + sqrt(1+alpha)*X_f;
+K = P_f*H'*((H*P_f*H'+Rm)\eye(nobs));
+mu_a = mu_f +K*(y-H*mu_f);
+
+Z = (sqrt(1+alpha)/sqrt(Ne-1))*X_f;
+tmp = Z'*H'*(Rm\(H*Z));
+tmp = .5*(tmp+tmp');
+[E,OM] = eig(tmp);
+T = E*(sqrtm(eye(Ne)+OM)\E');
+Za = Z*T;
+
+X = mu_a + sqrt(Ne-1)*Za;
 P_a = (eye(n)-K*H)*P_f;                             % analysis covariance
-V = (X_f')*(H');
-A = (V/Rm)*(V');
-A = 0.5.*(A+A');
-[U,lambda] = eig(A);
-Q = real(sqrtm(eye(ne)+lambda));
-Z = U/Q;
-%W = randomrotation(ne);
-X_a = X_f*Z;                                        % analysis perturbations
-X = mu_a + sqrt(ne-1).*X_a;                         % analysis ensemble
+spread = sqrt(trace(P_a)/n);
+
+% mu_f = mean(X,2);                                   % forecast mean
+% x_f = mu_f + sqrt(1+alpha).*(X-mu_f);               % ensemble inflation
+% X_f = (x_f - mu_f).*(1/sqrt(ne-1));                 % forecast perturbations
+% P_f = cov(X_f');                                    % forecast covariance
+% P_f = L.*P_f;                                       % localization
+% K = P_f*(H')/(H*P_f*H' + Rm);                       % Kalman Gain
+% mu_a = mu_f + K*(y-H*mu_f);                         % analysis mean
+% P_a = (eye(n)-K*H)*P_f;                             % analysis covariance
+% V = (X_f')*(H');
+% A = (V/Rm)*(V');
+% A = 0.5.*(A+A');
+% [U,lambda] = eig(A);
+% Q = real(sqrtm(eye(ne)+lambda));
+% Z = U/Q;
+% X_a = X_f*Z;                                        % analysis perturbations
+% X = sqrt(ne-1).*X_a + mu_a;                         % analysis ensemble
 
 end
 
