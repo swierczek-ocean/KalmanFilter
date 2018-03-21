@@ -1,5 +1,5 @@
 
-n = 6;
+n = 20;
 x = ones(n,1)/sqrt(n);
 Omega = 5*randn(n-1,n-1);
 [U,S,V] = svd(Omega);

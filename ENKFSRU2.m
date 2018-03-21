@@ -1,4 +1,4 @@
-function [X,mu_a,spread] = ENKFSRU(X,dt,jump,n,Ne,H,M,N,F,alpha,y,L,Rm,nobs)
+function [X,mu_a,spread] = ENKFSRU2(X,dt,jump,n,Ne,H,M,N,F,alpha,y,L,Rm,nobs)
 
 for i=1:jump
     X = lorenz96s4(X,dt,M,N,F);    % forecast ensemble
@@ -17,8 +17,8 @@ tmp = .5*(tmp+tmp');
 [E,OM] = eig(tmp);
 T = E/(sqrtm(eye(Ne)+OM));
 Za = Z*T;
-%W = randrot(Ne);
-X = mu_a + sqrt(Ne-1)*Za;
+W = randrot(Ne);
+X = mu_a + sqrt(Ne-1)*Za*W;
 spread = sqrt(trace(cov(X'))/n);
 
 end

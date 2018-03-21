@@ -7,7 +7,7 @@ end
 P_f = (1+alpha)*L.*cov(X');
 mu_f = mean(X,2);                                   % forecast mean
 X_f = (X - mu_f);                                   % forecast perturbations
-X_t = mu_f + sqrt(1+alpha)*X_f;
+%X_t = mu_f + sqrt(1+alpha)*X_f;
 K = P_f*H'*((H*P_f*H'+Rm)\eye(nobs));
 mu_a = mu_f +K*(y-H*mu_f);
 
@@ -17,6 +17,7 @@ tmp = .5*(tmp+tmp');
 [E,OM] = eig(tmp);
 T = E*(sqrtm(eye(Ne)+OM)\E');
 Za = Z*T;
+
 
 X = mu_a + sqrt(Ne-1)*Za;
 P_a = (eye(n)-K*H)*P_f;                             % analysis covariance
