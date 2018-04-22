@@ -1,11 +1,11 @@
-function [X,mu_a,P_a] = ENKFPO2(x,dt,n,Ne,H,R,r,alpha,y,M1,M2,M3,Q)
+function [X,mu_a,P_a] = ENKFPO2(x,dt,n,Ne,H,R,r,alpha,y,M1,M2,M3,sqrtQ)
 
 [nx,mx] = size(x);
 L = localize2(n,r);
 m = size(y,1);
 Rm = R*eye(m);
 
-X = lorenz63s4(x,dt,M1,M2,M3)+sqrt(dt)*sqrt(Q).*randn(nx,mx);
+X = lorenz63s4(x,dt,M1,M2,M3)+sqrt(dt).*sqrtQ*randn(nx,mx);
 
 mu_f = mean(X,2);                                   % forecast mean
 X = mu_f + sqrt(1+alpha).*(X-mu_f);                 % ensemble inflation

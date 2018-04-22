@@ -1,4 +1,4 @@
-function lorenz63plots2(Traj,PF,color1,color2,color3,color4,color5,coords1,coords2,name,ll,nsteps)
+function lorenz63plots4(Traj,PF,color1,color2,color3,color4,color5,coords1,coords2,name,ll,nsteps)
 colors
 
 %% Error plot
@@ -46,7 +46,7 @@ set(gca, 'nextplot','replacechildren', 'Visible','off');
 nFrames = 471;
 vidObj = VideoWriter([name,'_lorenz63_3d.avi']);
 vidObj.Quality = 100;
-vidObj.FrameRate = 30;
+vidObj.FrameRate = 15;
 open(vidObj);
 writeVideo(vidObj, getframe(gca));
 
@@ -54,7 +54,7 @@ for jj=2:(ll+1)
     if(mod(jj,10)==0)
         plot3(Traj(3,1:jj),Traj(1,1:jj),Traj(2,1:jj),'Color',Color(:,color1),'Linewidth',1.6)
         hold on
-        plot3(PF(3,1:jj),PF(1,1:jj),PF(2,1:jj),'.','Color',Color(:,color2),'MarkerSize',6)
+        plot3(PF(3,1:2:jj),PF(1,1:2:jj),PF(2,1:2:jj),'.','Color',Color(:,color2),'MarkerSize',6)
         axis(coords1)
         hold off
         drawnow()
@@ -66,7 +66,7 @@ for jj=(ll+2):nsteps
     if(mod(jj,10)==0)
         plot3(Traj(3,jj-ll:jj),Traj(1,jj-ll:jj),Traj(2,jj-ll:jj),'Color',Color(:,color1),'Linewidth',1.6)
         hold on
-        plot3(PF(3,jj-ll:jj),PF(1,jj-ll:jj),PF(2,jj-ll:jj),'.','Color',Color(:,color2),'MarkerSize',6)
+        plot3(PF(3,jj-ll:2:jj),PF(1,jj-ll:2:jj),PF(2,jj-ll:2:jj),'.','Color',Color(:,color2),'MarkerSize',6)
         axis(coords1)
         hold off
         drawnow()
@@ -90,7 +90,7 @@ set(gca, 'nextplot','replacechildren', 'Visible','off');
 nFrames = 471;
 vidObj = VideoWriter([name,'_lorenz63_2d.avi']);
 vidObj.Quality = 100;
-vidObj.FrameRate = 30;
+vidObj.FrameRate = 15;
 open(vidObj);
 writeVideo(vidObj, getframe(gca));
 
@@ -98,7 +98,7 @@ for jj=2:(ll+1)
     if(mod(jj,10)==0)
         plot(Traj(1,1:jj),Traj(3,1:jj),'Color',Color(:,color4),'Linewidth',1.6)
         hold on
-        plot(PF(1,1:jj),PF(3,1:jj),'.','Color',Color(:,color5),'MarkerSize',6)
+        plot(PF(1,1:2:jj),PF(3,1:2:jj),'.','Color',Color(:,color5),'MarkerSize',6)
         axis(coords2)
         hold off
         drawnow()
@@ -110,7 +110,7 @@ for jj=(ll+2):nsteps
     if(mod(jj,10)==0)
         plot(Traj(1,jj-ll:jj),Traj(3,jj-ll:jj),'Color',Color(:,color4),'Linewidth',1.6)
         hold on
-        plot(PF(1,jj-ll:jj),PF(3,jj-ll:jj),'.','Color',Color(:,color5),'MarkerSize',6)
+        plot(PF(1,jj-ll:2:jj),PF(3,jj-ll:2:jj),'.','Color',Color(:,color5),'MarkerSize',6)
         axis(coords2)
         hold off
         drawnow()
@@ -158,7 +158,7 @@ set(gca, 'nextplot','replacechildren', 'Visible','off');
 nFrames = 471;
 vidObj = VideoWriter([name,'_lorenz63_3d_whole.avi']);
 vidObj.Quality = 100;
-vidObj.FrameRate = 30;
+vidObj.FrameRate = 15;
 open(vidObj);
 writeVideo(vidObj, getframe(gca));
 
@@ -168,7 +168,7 @@ for jj=2:nsteps
     if(mod(jj,10)==0)
         plot3(Traj(3,1:jj),Traj(1,1:jj),Traj(2,1:jj),'Color',Color(:,color1),'Linewidth',1.6)
         hold on
-        plot3(PF(3,1:jj),PF(1,1:jj),PF(2,1:jj),'.','Color',Color(:,color2),'MarkerSize',5)
+        plot3(PF(3,1:2:jj),PF(1,1:2:jj),PF(2,1:2:jj),'.','Color',Color(:,color2),'MarkerSize',5)
         axis(coords1)
         hold off
         drawnow()
@@ -192,7 +192,7 @@ set(gca, 'nextplot','replacechildren', 'Visible','off');
 nFrames = 471;
 vidObj = VideoWriter([name,'_lorenz63_2d_whole.avi']);
 vidObj.Quality = 100;
-vidObj.FrameRate = 30;
+vidObj.FrameRate = 15;
 open(vidObj);
 writeVideo(vidObj, getframe(gca));
 
@@ -200,7 +200,7 @@ for jj=2:nsteps
     if(mod(jj,10)==0)
         plot(Traj(1,1:jj),Traj(3,1:jj),'Color',Color(:,color4),'Linewidth',1.6)
         hold on
-        plot(PF(1,1:jj),PF(3,1:jj),'.','Color',Color(:,color5),'MarkerSize',5)
+        plot(PF(1,1:2:jj),PF(3,1:2:jj),'.','Color',Color(:,color5),'MarkerSize',5)
         axis(coords2)
         hold off
         drawnow()
@@ -213,4 +213,3 @@ close(vidObj);
 
 
 end
-

@@ -63,7 +63,7 @@ Error = sqrt(sum(Error.^2))./sqrt(3);
 st = floor(0.25*nsteps);
 average_RMSE = mean(Error(st:end))
 
-%lorenz63plots2(Traj,PF,color1,color2,color3,color4,color5,coords1,coords2,name,ll,nsteps)
+lorenz63plots2(Traj,PF,color1,color2,color3,color4,color5,coords1,coords2,name,ll,nsteps)
 %%
 
 toc()
