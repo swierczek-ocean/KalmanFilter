@@ -87,51 +87,61 @@ end
 % close(vidObj);
 
 
-
-figure, set(gcf, 'Color','white')
-plot(Traj(1,1),Traj(3,1),'Color',Color(:,31),'Linewidth',3.5)
-hold on
-plot(Traj2(1,1),Traj2(3,1),'Color',Color(:,33),'Linewidth',1.5)
-axis([-25 25 -10 60])
-hold off
-set(gca, 'nextplot','replacechildren', 'Visible','off');
-
-nFrames = 471;
-vidObj = VideoWriter('lorenz63_2d_split.avi');
-vidObj.Quality = 100;
-vidObj.FrameRate = 30;
-open(vidObj);
-writeVideo(vidObj, getframe(gca));
-
-for ii=2:25
-    if(mod(ii,8)==0)
-        plot(Traj(1,1:ii),Traj(3,1:ii),'Color',Color(:,31),'Linewidth',3.3)
-        hold on
-        plot(Traj2(1,1:ii),Traj2(3,1:ii),'Color',Color(:,33),'Linewidth',1.3)
-        axis([-25 25 -10 60])
-        hold off
-        drawnow()
-        writeVideo(vidObj, getframe(gca));
-    end
-end
-
-for ii=26:nsteps
-    if(mod(ii,8)==0)
-        plot(Traj(1,ii-24:ii),Traj(3,ii-24:ii),'Color',Color(:,31),'Linewidth',3.3)
-        hold on
-        plot(Traj2(1,ii-24:ii),Traj2(3,ii-24:ii),'Color',Color(:,33),'Linewidth',1.3)
-        axis([-25 25 -10 60])
-        hold off
-        drawnow()
-        writeVideo(vidObj, getframe(gca));
-    end
-end
-
-close(vidObj);
-
-
+% 
+% figure, set(gcf, 'Color','white')
+% plot(Traj(1,1),Traj(3,1),'Color',Color(:,31),'Linewidth',3.5)
+% hold on
+% plot(Traj2(1,1),Traj2(3,1),'Color',Color(:,33),'Linewidth',1.5)
+% axis([-25 25 -10 60])
+% hold off
+% set(gca, 'nextplot','replacechildren', 'Visible','off');
+% 
+% nFrames = 471;
+% vidObj = VideoWriter('lorenz63_2d_split.avi');
+% vidObj.Quality = 100;
+% vidObj.FrameRate = 30;
+% open(vidObj);
+% writeVideo(vidObj, getframe(gca));
+% 
+% for ii=2:25
+%     if(mod(ii,8)==0)
+%         plot(Traj(1,1:ii),Traj(3,1:ii),'Color',Color(:,31),'Linewidth',3.3)
+%         hold on
+%         plot(Traj2(1,1:ii),Traj2(3,1:ii),'Color',Color(:,33),'Linewidth',1.3)
+%         axis([-25 25 -10 60])
+%         hold off
+%         drawnow()
+%         writeVideo(vidObj, getframe(gca));
+%     end
+% end
+% 
+% for ii=26:nsteps
+%     if(mod(ii,8)==0)
+%         plot(Traj(1,ii-24:ii),Traj(3,ii-24:ii),'Color',Color(:,31),'Linewidth',3.3)
+%         hold on
+%         plot(Traj2(1,ii-24:ii),Traj2(3,ii-24:ii),'Color',Color(:,33),'Linewidth',1.3)
+%         axis([-25 25 -10 60])
+%         hold off
+%         drawnow()
+%         writeVideo(vidObj, getframe(gca));
+%     end
+% end
+% 
+% close(vidObj);
 
 
+
+Error = Traj - Traj2;
+Error = sqrt(sum(Error.^2))./sqrt(3);
+st = floor(0.25*nsteps);
+average_RMSE = mean(Error(st:end))
+
+figure
+plot(Error,'.','Color',Color(:,16),'MarkerSize',6)
+title('RMSE for model with no DA')
+xlabel('time step')
+ylabel('error')
+print('no_DA_error','-djpeg')
 
 
 

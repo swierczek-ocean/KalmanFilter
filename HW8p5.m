@@ -12,11 +12,12 @@ sigma = 10;
 beta = 8/3;
 rho = 28;
 dt = 0.01;
-Q = 0.001*dt*eye(3);
+Q = 0.00001*dt*eye(3);
 sqrtQ = sqrtm(Q);
 R = 1;
 nsteps = 20000;
 Traj = zeros(3,nsteps);
+Traj(:,1) = [3;3;3];
 KF = zeros(3,nsteps);
 Ne = 20;
 M1 = [0,0,0;-1,0,0;1,0,0];
@@ -24,13 +25,13 @@ M2 = [0,0,0;0,0,1;0,1,0];
 M3 = [-sigma,sigma,0;rho,-1,0;0,0,-beta];
 color1 = 11;
 color2 = 12;
-color3 = 22;
-color4 = 11;
-color5 = 12;
+color3 = 16;
+color4 = 31;
+color5 = 33;
 coords1 = [-10 60 -25 25 -30 30];
-coords2 = [-25 25 -10 60];
+coords2 = [-21 21 -3 52];
 name = 'ENKFPO2';
-ll = 25;
+ll = 30;
 %%
 
 %% true state
@@ -64,7 +65,8 @@ Error = sqrt(sum(Error.^2))./sqrt(3);
 st = floor(0.25*nsteps);
 average_RMSE = mean(Error(st:end))
 
-lorenz63plots2(Traj,KF,color1,color2,color3,color4,color5,coords1,coords2,name,ll,nsteps)
+% lorenz63plots2(Traj,KF,color1,color2,color3,color4,color5,coords1,coords2,name,ll,nsteps)
+lorenz63plots5(Traj,KF,Obs,color1,color2,color3,color4,color5,coords1,coords2,name,ll,nsteps)
 %%
 
 toc()
