@@ -34,13 +34,13 @@ for k=1:size_k
     Ens(k+1,:) = resamplingmmo(W,Ens(k+1,:),Ne,1);
     SPF(:,k+1) = mean(Ens(k+1,:),2);
     
-    figure
-    histogram(Ens(k+1,:),40,'Normalization','pdf');
-    axis([-36 36 0 0.6])
-    xlabel('x')
-    ylabel('p(x)')
-    title(['ensemble distribution at k = ',num2str(k)])
-    print(['p(x)_k_',num2str(k)],'-djpeg')
+%     figure
+%     histogram(Ens(k+1,:),40,'Normalization','pdf');
+%     axis([-36 36 0 0.6])
+%     xlabel('x')
+%     ylabel('p(x)')
+%     title(['ensemble distribution at k = ',num2str(k)])
+%     print(['p(x)_k_',num2str(k)],'-djpeg')
 end
 
 %%
