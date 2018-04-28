@@ -9,7 +9,7 @@ axis(coords1)
 set(gca, 'nextplot','replacechildren', 'Visible','off');
 
 nFrames = 471;
-vidObj = VideoWriter([name,'_lorenz96_3d_whole.avi']);
+vidObj = VideoWriter([name,'_lorenz96_3d_noDA.avi']);
 vidObj.Quality = 100;
 vidObj.FrameRate = 30;
 open(vidObj);
