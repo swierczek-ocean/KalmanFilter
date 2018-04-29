@@ -4,7 +4,7 @@ colors
 load Data
 HareLynx = Data(:,2:3)';
 dim = 6;
-Ne = 5e4;
+Ne = 1e5;
 theta = zeros(dim,Ne);
 theta(:,1) = [0.5861; 0.2345; 0.7780; 0.1768; 2.5786; 3.8248];
 num_sims = 100;
